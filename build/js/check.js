@@ -16,12 +16,12 @@ function getMessage (a, b) {
   }
 
   //если числовой тип
-  if (typeof a === 'number') {
+  else if (typeof a === 'number') {
     result = 'Я прыгнул на ' + a*100 + ' сантиметров';
   }
 
   //если массив только а
-  if (typeof a === 'object' && typeof b !== 'object') {
+  else if (typeof a === 'object' && typeof b !== 'object') {
     var sum = 0;
     for (var i = 0; i < a.length; i++) {
       sum += a[i];
@@ -30,7 +30,7 @@ function getMessage (a, b) {
   }
 
   //если оба массивы
-  if (typeof a === 'object' && typeof b === 'object') {
+  else if (typeof a === 'object' && typeof b === 'object') {
     var length = 0;
     for (var i = 0; i < a.length; i++) {
       if (i < b.length) {
