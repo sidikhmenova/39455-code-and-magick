@@ -6,23 +6,22 @@ function getMessage (a, b) {
   var result;
 
   //если первый аргумент логический тип
-  if (typeof a == 'boolean') {
+  if (typeof a === 'boolean') {
     if (a) {
       result = 'Я попал в ' + b;
     }
-
     else {
       result = 'Я никуда не попал';
     }
   }
 
   //если числовой тип
-  if (typeof a == 'number') {
+  if (typeof a === 'number') {
     result = 'Я прыгнул на ' + a*100 + ' сантиметров';
   }
 
   //если массив только а
-  if (typeof a == 'object' && typeof b !== 'object') {
+  if (typeof a === 'object' && typeof b !== 'object') {
     var sum = 0;
     for (var i = 0; i < a.length; i++) {
       sum += a[i];
@@ -31,11 +30,11 @@ function getMessage (a, b) {
   }
 
   //если оба массивы
-  if (typeof a == 'object' && typeof b == 'object') {
+  if (typeof a === 'object' && typeof b === 'object') {
     var length = 0;
     for (var i = 0; i < a.length; i++) {
-      if (i< b.length) {
-        length += a[i]*b[i];
+      if (i < b.length) {
+        length += a[i] * b[i];
       }
     }
     result = 'Я прошёл ' + length + ' метров';
