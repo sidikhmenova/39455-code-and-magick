@@ -374,22 +374,94 @@
       }
     },
 
+    /*
+    * Отрисовка сообщения
+    * @param {string} text
+     */
+    _showMessage: function(textMsg) {
+      var ctx = this.ctx;
+      // максимально кол-во знаков в строке
+      var maxSignInLine = 35;
+
+      // параметры бокса сообщения
+      var x = 300;
+      var y = 100;
+      var padding = 15;
+      var lineHeight = 25;
+
+      // вызываем функцию отрисовки текста сообщения и возвращаем кол-во строк
+      var countLine = showText(textMsg, maxSignInLine).length;
+      // вызываем функцию отрисовки бокса сообщения
+      showTextBox(countLine);
+
+      function showText(text, maxSign) {
+        ctx.font = '20px PT Mono';
+        ctx.fillStyle = '#000';
+        ctx.textBaseline = 'hanging';
+        var margin = y;
+
+        var j = 0;
+        // наполняем массив словами текста сообщения
+        var wordArray = text.split(' ');
+        // создаем пустой массив, для последующего наполнения его строчками из слов
+        var lineWord = [''];
+
+        for (var i = 0; i < wordArray.length; i++) {
+          // если кол-во знаков в массиве меньше максимального, то наполняем массив j строки словами
+          // пока кол-во знаков данной строки не превысит максимальную отметку.
+          // При превышении макс.допустимого кол-ва знаков - переносим на след.строку
+          if (lineWord[j].length + wordArray[i].length < maxSign) {
+            lineWord[j] += wordArray[i] + ' ';
+          } else {
+            j++;
+            lineWord[j] = [''];
+            lineWord[j] += wordArray[i] + ' ';
+          }
+        }
+
+        // отрисовываем текст по строчкам
+        for (i = 0; i < lineWord.length; i++) {
+          ctx.fillText(lineWord[i], x, margin);
+          margin += lineHeight;
+        }
+
+        return (lineWord);
+      }
+
+      // функция отрисовки бокса сообщения
+      function showTextBox(cntLine) {
+        var msgHeight = cntLine * lineHeight;
+        var msgWidth = maxSignInLine * 8;
+
+        ctx.beginPath();
+        ctx.rect(x - padding, y - padding, msgWidth + padding, msgHeight + padding);
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+    },
+
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          var failMsg = 'Ты лучший из лучших';
+          this._showMessage(failMsg);
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          var failMsg = 'Ты проиграл';
+          this._showMessage(failMsg);
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          var pauseMsg = 'Спасибо, что остановил меня!';
+          this._showMessage(pauseMsg);
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          var introMsg = 'Парам-парам-па! Меня зовут Пендальф, и я синий! Нажми на Space и ты увидишь на что я способен';
+          this._showMessage(introMsg);
           break;
       }
     },
