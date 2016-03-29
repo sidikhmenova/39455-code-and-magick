@@ -380,63 +380,67 @@
      */
     _showMessage: function(textMsg) {
       var ctx = this.ctx;
-      // максимально кол-во знаков в строке
-      var maxSignInLine = 35;
 
       // параметры бокса сообщения
       var x = 300;
       var y = 100;
-      var padding = 15;
+      var padding = 25;
       var lineHeight = 25;
+      var maxSignInLine = 40;
+      var msgWidth = maxSignInLine * 8;
 
-      // вызываем функцию отрисовки текста сообщения и возвращаем кол-во строк
-      var countLine = showText(textMsg, maxSignInLine).length;
-      // вызываем функцию отрисовки бокса сообщения
-      showTextBox(countLine);
+      // параметры текста
+      ctx.font = '16px PT Mono';
+      ctx.textBaseline = 'hanging';
+      var margin = y;
 
-      function showText(text, maxSign) {
-        ctx.font = '20px PT Mono';
-        ctx.fillStyle = '#000';
-        ctx.textBaseline = 'hanging';
-        var margin = y;
+      var j = 0;
+      // наполняем массив словами текста сообщения
+      var wordArray = textMsg.split(' ');
+      // создаем пустой массив, для последующего наполнения его строчками из слов
+      var lineWord = [''];
 
-        var j = 0;
-        // наполняем массив словами текста сообщения
-        var wordArray = text.split(' ');
-        // создаем пустой массив, для последующего наполнения его строчками из слов
-        var lineWord = [''];
-
-        for (var i = 0; i < wordArray.length; i++) {
-          // если кол-во знаков в массиве меньше максимального, то наполняем массив j строки словами
-          // пока кол-во знаков данной строки не превысит максимальную отметку.
-          // При превышении макс.допустимого кол-ва знаков - переносим на след.строку
-          if (lineWord[j].length + wordArray[i].length < maxSign) {
-            lineWord[j] += wordArray[i] + ' ';
-          } else {
-            j++;
-            lineWord[j] = [''];
-            lineWord[j] += wordArray[i] + ' ';
-          }
+      for (var i = 0; i < wordArray.length; i++) {
+        // если кол-во знаков в массиве меньше максимального, то наполняем массив j строки словами
+        // пока кол-во знаков данной строки не превысит максимальную отметку.
+        // При превышении макс.допустимого кол-ва знаков - переносим на след.строку
+        if (lineWord[j].length + wordArray[i].length < maxSignInLine) {
+          lineWord[j] += wordArray[i] + ' ';
+        } else {
+          j++;
+          lineWord[j] = [''];
+          lineWord[j] += wordArray[i] + ' ';
         }
-
-        // отрисовываем текст по строчкам
-        for (i = 0; i < lineWord.length; i++) {
-          ctx.fillText(lineWord[i], x, margin);
-          margin += lineHeight;
-        }
-
-        return (lineWord);
       }
 
-      // функция отрисовки бокса сообщения
-      function showTextBox(cntLine) {
-        var msgHeight = cntLine * lineHeight;
-        var msgWidth = maxSignInLine * 8;
+      // Вычисляем высоту бокса
+      var msgHeight = lineWord.length * lineHeight;
 
-        ctx.beginPath();
-        ctx.rect(x - padding, y - padding, msgWidth + padding, msgHeight + padding);
-        ctx.stroke();
-        ctx.closePath();
+      // рисуем тень
+      ctx.fillStyle = '#313030';
+      ctx.beginPath();
+      ctx.moveTo(x , y);
+      ctx.lineTo(2 * msgWidth + 0.25 * padding, y);
+      ctx.lineTo(2 * msgWidth - 0.5 * padding, 2.5 * msgHeight + 0.25 * padding);
+      ctx.lineTo(x + 0.25 * padding, 2.7 * msgHeight + 0.25 * padding);
+      ctx.fill();
+      ctx.closePath();
+
+      // рисуем бокс сообщения
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.moveTo(x - padding, y - padding);
+      ctx.lineTo(2 * msgWidth, y - padding);
+      ctx.lineTo(2 * msgWidth - padding, 2.5 * msgHeight);
+      ctx.lineTo(x, 2.7 * msgHeight);
+      ctx.fill();
+      ctx.closePath();
+
+      // отрисовываем текст по строчкам
+      ctx.fillStyle = 'black';
+      for (i = 0; i < lineWord.length; i++) {
+        ctx.fillText(lineWord[i], x, margin);
+        margin += lineHeight;
       }
 
     },
@@ -446,24 +450,22 @@
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      var textMsg;
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          var failMsg = 'Ты лучший из лучших';
-          this._showMessage(failMsg);
+          textMsg = 'Ты лучший из лучших';
           break;
         case Verdict.FAIL:
-          var failMsg = 'Ты проиграл';
-          this._showMessage(failMsg);
+          textMsg = 'Ты проиграл';
           break;
         case Verdict.PAUSE:
-          var pauseMsg = 'Спасибо, что остановил меня!';
-          this._showMessage(pauseMsg);
+          textMsg = 'Спасибо, что остановил меня!';
           break;
         case Verdict.INTRO:
-          var introMsg = 'Парам-парам-па! Меня зовут Пендальф, и я синий! Нажми на Space и ты увидишь на что я способен';
-          this._showMessage(introMsg);
+          textMsg = 'Парам-парам-па! Меня зовут Пендальф, и я синий! Нажми на Space и ты увидишь на что я способен';
           break;
       }
+      this._showMessage(textMsg);
     },
 
     /**
