@@ -374,24 +374,90 @@
       }
     },
 
+    /*
+    * Отрисовка сообщения
+    * @param {string} text
+     */
+    _showMessage: function(textMsg) {
+      var ctx = this.ctx;
+
+      // параметры бокса сообщения
+      var x = 300;
+      var y = 100;
+      var padding = 25;
+      var lineHeight = 25;
+      var maxSignInLine = 35;
+      var msgWidth = maxSignInLine * 9;
+
+      // параметры текста
+      ctx.font = '16px PT Mono';
+      ctx.textBaseline = 'middle';
+      var margin = y;
+
+      var j = 0;
+      // наполняем массив словами текста сообщения
+      var wordArray = textMsg.split(' ');
+      // создаем пустой массив, для последующего наполнения его строчками из слов
+      var lineWord = [''];
+
+      for (var i = 0; i < wordArray.length; i++) {
+        // если кол-во знаков в массиве меньше максимального, то наполняем массив j строки словами
+        // пока кол-во знаков данной строки не превысит максимальную отметку.
+        // При превышении макс.допустимого кол-ва знаков - переносим на след.строку
+        if (lineWord[j].length + wordArray[i].length < maxSignInLine) {
+          lineWord[j] += wordArray[i] + ' ';
+        } else {
+          j++;
+          lineWord[j] = [''];
+          lineWord[j] += wordArray[i] + ' ';
+        }
+      }
+
+      // Вычисляем высоту бокса
+      var msgHeight = lineWord.length * lineHeight;
+
+      // рисуем тень
+      ctx.fillStyle = '#313030';
+      ctx.beginPath();
+      ctx.fillRect(x, y, msgWidth + (0.5 * padding), msgHeight + (0.5 * padding));
+      ctx.closePath();
+
+      // рисуем бокс сообщения
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.fillRect(x - padding, y - padding, msgWidth + padding, msgHeight + padding);
+      ctx.closePath();
+
+      // отрисовываем текст по строчкам
+      ctx.fillStyle = 'black';
+      for (i = 0; i < lineWord.length; i++) {
+        ctx.fillText(lineWord[i], x, margin);
+        margin += lineHeight;
+      }
+
+    },
+
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      var textMsg;
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          textMsg = 'Ты лучший из лучших!';
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          textMsg = 'Ты проиграл';
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          textMsg = 'Спасибо, что остановил меня!';
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          textMsg = 'Парам-парам-па! Меня зовут Пендальф, и я синий! Нажми на Space и ты увидишь на что я способен (прям ого-го) !!!';
           break;
       }
+      this._showMessage(textMsg);
     },
 
     /**
@@ -682,6 +748,7 @@
   window.Game.Verdict = Verdict;
 
   var game = new Game(document.querySelector('.demo'));
-  game.initializeLevelAndStart();
+  setTimeout(game.initializeLevelAndStart(), 10000);
+  //game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 })();
