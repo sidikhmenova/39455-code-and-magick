@@ -386,12 +386,12 @@
       var y = 100;
       var padding = 25;
       var lineHeight = 25;
-      var maxSignInLine = 40;
-      var msgWidth = maxSignInLine * 8;
+      var maxSignInLine = 35;
+      var msgWidth = maxSignInLine * 9;
 
       // параметры текста
       ctx.font = '16px PT Mono';
-      ctx.textBaseline = 'hanging';
+      ctx.textBaseline = 'middle';
       var margin = y;
 
       var j = 0;
@@ -419,21 +419,13 @@
       // рисуем тень
       ctx.fillStyle = '#313030';
       ctx.beginPath();
-      ctx.moveTo(x , y);
-      ctx.lineTo(2 * msgWidth + 0.25 * padding, y);
-      ctx.lineTo(2 * msgWidth - 0.5 * padding, 2.5 * msgHeight + 0.25 * padding);
-      ctx.lineTo(x + 0.25 * padding, 2.7 * msgHeight + 0.25 * padding);
-      ctx.fill();
+      ctx.fillRect(x, y, msgWidth + (0.5 * padding), msgHeight + (0.5 * padding));
       ctx.closePath();
 
       // рисуем бокс сообщения
       ctx.fillStyle = '#FFFFFF';
       ctx.beginPath();
-      ctx.moveTo(x - padding, y - padding);
-      ctx.lineTo(2 * msgWidth, y - padding);
-      ctx.lineTo(2 * msgWidth - padding, 2.5 * msgHeight);
-      ctx.lineTo(x, 2.7 * msgHeight);
-      ctx.fill();
+      ctx.fillRect(x - padding, y - padding, msgWidth + padding, msgHeight + padding);
       ctx.closePath();
 
       // отрисовываем текст по строчкам
@@ -453,7 +445,7 @@
       var textMsg;
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          textMsg = 'Ты лучший из лучших';
+          textMsg = 'Ты лучший из лучших!';
           break;
         case Verdict.FAIL:
           textMsg = 'Ты проиграл';
@@ -756,6 +748,7 @@
   window.Game.Verdict = Verdict;
 
   var game = new Game(document.querySelector('.demo'));
-  game.initializeLevelAndStart();
+  setTimeout(game.initializeLevelAndStart(), 10000);
+  //game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 })();
