@@ -6,4 +6,3 @@
 require('./form');
 require('./game');
 require('./check');
-require('./game-stat.min');
