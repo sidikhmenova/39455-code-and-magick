@@ -21,10 +21,8 @@
   });
 
   // Обработчик клика на блок с оценками
-  reviewGroupMark.addEventListener('change', function(evt) {
-    //setActiveMark();
-    reviewMark = evt.target.value;
-    reviewText.required = reviewMark < 3;
+  reviewGroupMark.addEventListener('change', function() {
+    reviewText.required = reviewMark.value < 3;
     formValidation();
   });
 
