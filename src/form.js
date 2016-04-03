@@ -1,6 +1,7 @@
 'use strict';
 
 (function() {
+  var cookies = require('browser-cookies');
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
@@ -14,29 +15,20 @@
   var reviewFields = document.querySelector('.review-fields');
   var reviewFName = document.querySelector('.review-fields-name');
   var reviewFText = document.querySelector('.review-fields-text');
-  var reviewMarkValue;
 
   formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
-    setActiveMark();
+    formValidation();
   });
 
   // Обработчик клика на блок с оценками
-  reviewGroupMark.addEventListener('change', function() {
-    setActiveMark();
-  });
-
-  function setActiveMark() {
-    for (var i = 0; i < reviewMark.length; i++) {
-      if (reviewMark[i].checked) {
-        reviewMarkValue = reviewMark[i].value;
-        reviewText.required = reviewMarkValue < 3;
-        break;
-      }
-    }
+  reviewGroupMark.addEventListener('change', function(evt) {
+    //setActiveMark();
+    reviewMark = evt.target.value;
+    reviewText.required = reviewMark < 3;
     formValidation();
-  }
+  });
 
   function formValidation() {
     var StatusRName = reviewUser.value.length > 0;
@@ -52,11 +44,6 @@
   // Обработчик события нажатия клавиши
   reviewForm.addEventListener('keyup', function() {
     formValidation();
-  });
-
-  formCloseButton.addEventListener('click', function(evt) {
-    evt.preventDefault();
-    formContainer.classList.add('invisible');
   });
 
 })();
