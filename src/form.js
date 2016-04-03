@@ -14,6 +14,10 @@
   var reviewFName = document.querySelector('.review-fields-name');
   var reviewFText = document.querySelector('.review-fields-text');
 
+  var cookies = require('browser-cookies');
+  reviewUser.value = cookies.get('reviewUser');
+  reviewText.value = cookies.get('reviewText');
+
   formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
@@ -41,5 +45,29 @@
   reviewForm.addEventListener('keyup', function() {
     formValidation();
   });
+
+  reviewForm.addEventListener('submit', function(evt) {
+    evt.preventDefault();
+
+    var dateToExpire = getDateExpire();
+
+    cookies.set('reviewUser', reviewUser.value, dateToExpire);
+    cookies.set('reviewText', reviewText.value, dateToExpire);
+    this.submit();
+  });
+
+   //Вычисояем кол-во дней для хранения Куки
+   //Вычесляется как:
+   //1) Определяем кол-во дней, прошедших с последнего дня рождения
+   //2) Прибавляем к текущей дате
+  function getDateExpire() {
+    var today = new Date();
+    var dateBD = new Date(2015, 3, 8);
+    var dateExp = +today - +dateBD;
+    var dateToExpire = +Date.now() + +dateExp;
+
+    return new Date(dateToExpire).toUTCString();
+  }
+
 
 })();
