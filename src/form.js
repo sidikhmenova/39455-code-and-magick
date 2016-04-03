@@ -14,82 +14,49 @@
   var reviewFields = document.querySelector('.review-fields');
   var reviewFName = document.querySelector('.review-fields-name');
   var reviewFText = document.querySelector('.review-fields-text');
+  var reviewMarkValue;
 
-
-  var clickedElement;
-
-
-  /**
-   * Проверяет, валидны ли данные, в форме отзыва.
-   * @return {boolean}
-   */
-
-
-  formOpenButton.onclick = function(evt) {
+  formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
-    getActiveMark();
-  };
-
-  // Функция получения текущей оценки
-  function getActiveMark() {
-    for (var i = 0; i < reviewMark.length; i++) {
-      if (reviewMark[i].checked) {
-        console.log('дф');
-      }
-    }
-  }
-
-  // Обработчик клика на блок с оценками
-  reviewGroupMark.addEventListener('click', function(evt) {
-    clickedElement = evt.target;
-    formValidation();
+    setActiveMark();
   });
 
-  // Валидация формы
-  function formValidation() {
-    if (clickedElement.value < 3 && reviewText.value.length && reviewUser.value.length) {
-      console.log('валидна');
-      reviewSubmit.disabled = false;
-      reviewFields.style.display = 'none';
-    } else if (clickedElement.value >= 3 && reviewUser.value.length) {
-      console.log('валидна');
-      reviewSubmit.disabled = false;
-      reviewFields.style.display = 'none';
-    } else if (clickedElement.value >= 3 && !reviewUser.value.length ) {
-      console.log('не валидна');
-      reviewFields.style.display = 'inline-block';
-      reviewFName.style.display = 'inline-block';
-      reviewFText.style.display = 'none';
-    } else if (clickedElement.value < 3 && !reviewUser.value.length && reviewText.value.length) {
-      console.log('не валидна');
-      reviewFields.style.display = 'inline-block';
-      reviewFName.style.display = 'inline-block';
-      reviewFText.style.display = 'none';
-    } else if (clickedElement.value < 3 && reviewUser.value.length && !reviewText.value.length) {
-      console.log('не валидна');
-      reviewFields.style.display = 'inline-block';
-      reviewFName.style.display = 'none';
-      reviewFText.style.display = 'inline-block';
-    } else {
-      console.log('не валидна');
-      reviewSubmit.disabled = true;
-      reviewFields.style.display = 'inline-block';
-      reviewFName.style.display = 'inline-block';
-      reviewFText.style.display = 'inline-block';
+  // Обработчик клика на блок с оценками
+  reviewGroupMark.addEventListener('change', function() {
+    setActiveMark();
+  });
 
+  function setActiveMark() {
+    for (var i = 0; i < reviewMark.length; i++) {
+      if (reviewMark[i].checked) {
+        reviewMarkValue = reviewMark[i].value;
+        reviewText.required = reviewMarkValue < 3;
+        break;
+      }
     }
+    formValidation();
+  }
+
+  function formValidation() {
+    var StatusRName = reviewUser.value.length > 0;
+    var StatusRText = !reviewText.required || reviewText.value.length > 0;
+    var StateValidation = StatusRName && StatusRText;
+    reviewSubmit.disabled = !StateValidation;
+    reviewFields.classList.toggle('invisible', StateValidation);
+    reviewFName.classList.toggle('invisible', StatusRName);
+    reviewFText.classList.toggle('invisible', StatusRText);
+
   }
 
   // Обработчик события нажатия клавиши
   reviewForm.addEventListener('keyup', function() {
-    console.log(reviewMark);
     formValidation();
   });
 
-  formCloseButton.onclick = function(evt) {
+  formCloseButton.addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.add('invisible');
-  };
+  });
 
 })();
