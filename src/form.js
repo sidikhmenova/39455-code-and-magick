@@ -1,10 +1,8 @@
 'use strict';
 
 (function() {
-  var cookies = require('browser-cookies');
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
-  var formCloseButton = document.querySelector('.review-form-close');
 
   var reviewForm = document.querySelector('.review-form');
   var reviewUser = reviewForm['review-name'];
