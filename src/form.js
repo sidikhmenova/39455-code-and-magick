@@ -16,7 +16,7 @@
 
   var cookies = require('browser-cookies');
   reviewUser.value = cookies.get('reviewUser');
-  reviewText.value = cookies.get('reviewText');
+  reviewMark.value = cookies.get('reviewMark');
 
   formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
@@ -52,7 +52,7 @@
     var dateToExpire = getDateExpire();
 
     cookies.set('reviewUser', reviewUser.value, dateToExpire);
-    cookies.set('reviewText', reviewText.value, dateToExpire);
+    cookies.set('reviewMark', reviewMark.value, dateToExpire);
     this.submit();
   });
 
@@ -62,8 +62,16 @@
    //2) Прибавляем к текущей дате
   function getDateExpire() {
     var today = new Date();
-    var dateBD = new Date(2015, 3, 8);
-    var dateExp = +today - +dateBD;
+    var dateBD = new Date(today.getFullYear(), 3, 8);
+    var dateExp;
+
+    if (dateBD > today) {
+      dateBD.setFullYear(dateBD.getFullYear() - 1);
+      dateExp = +today - +dateBD;
+    } else {
+      dateExp = +today - +dateBD;
+    }
+
     var dateToExpire = +Date.now() + +dateExp;
 
     return new Date(dateToExpire).toUTCString();
