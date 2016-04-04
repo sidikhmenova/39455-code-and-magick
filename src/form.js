@@ -16,7 +16,7 @@
 
   var cookies = require('browser-cookies');
   reviewUser.value = cookies.get('reviewUser');
-  reviewMark.value = cookies.get('reviewMark');
+  reviewMark.value = cookies.get('reviewMark') || 3;
 
   formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
