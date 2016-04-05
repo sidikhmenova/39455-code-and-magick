@@ -21,6 +21,7 @@
   formOpenButton.addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
+    reviewText.required = reviewMark.value < 3;
     formValidation();
   });
 
@@ -38,7 +39,6 @@
     reviewFields.classList.toggle('invisible', StateValidation);
     reviewFName.classList.toggle('invisible', StatusRName);
     reviewFText.classList.toggle('invisible', StatusRText);
-
   }
 
   // Обработчик события нажатия клавиши
