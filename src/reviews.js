@@ -43,16 +43,16 @@
     var backgroundImage = new Image();
     var backgroundLoadTimeout;
 
-    backgroundImage.onload = function(evt) {
+    backgroundImage.addEventListener('load', function(evt) {
       clearTimeout(backgroundLoadTimeout);
       reviewAutor.src = evt.target.src;
       reviewAutor.width = 124;
       reviewAutor.height = 124;
-    };
+    });
 
-    backgroundImage.onerror = function() {
+    backgroundImage.addEventListener('error', function() {
       element.classList.add('review-load-failure');
-    };
+    });
 
     backgroundImage.src = data.author.picture;
 
