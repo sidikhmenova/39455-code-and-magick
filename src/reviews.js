@@ -67,15 +67,9 @@
     var reviewRatingBlock = element.querySelector('.review-rating');
     var rating = data.rating;
 
-    var transRating = {
-      1: 'one',
-      2: 'two',
-      3: 'tree',
-      4: 'four',
-      5: 'five'
-    };
+    var transRating = ['one', 'two', 'tree', 'four', 'five'];
 
-    reviewRatingBlock.classList.add('review-rating-' + transRating[rating]);
+    reviewRatingBlock.classList.add('review-rating-' + transRating[rating - 1]);
 
     return element;
   };
