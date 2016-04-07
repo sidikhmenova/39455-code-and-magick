@@ -37,17 +37,19 @@
     container.appendChild(element);
 
     var reviewAutor = element.querySelector('.review-author');
-    reviewAutor.alt = 'Отзыв пользоватедя' + data.name + 'об игре Code & Magick';
+    reviewAutor.alt = 'Отзыв пользоватедя ' + data.author.name + ' об игре Code & Magick';
     reviewAutor.title = data.name;
 
     var backgroundImage = new Image();
     var backgroundLoadTimeout;
 
     backgroundImage.addEventListener('load', function(evt) {
+      backgroundImage.src = data.author.picture;
       clearTimeout(backgroundLoadTimeout);
-      reviewAutor.src = evt.target.src;
-      reviewAutor.width = 124;
-      reviewAutor.height = 124;
+      element.replaceChild(backgroundImage, element.children[0]);
+      backgroundImage.classList.add('review-author');
+      backgroundImage.width = 124;
+      backgroundImage.height = 124;
     });
 
     backgroundImage.addEventListener('error', function() {
@@ -78,8 +80,8 @@
     return element;
   };
 
-  window.reviews.forEach(function(reviews) {
-    getReviewElement(reviews, reviewContainer);
+  window.reviews.forEach(function(reviewItem) {
+    getReviewElement(reviewItem, reviewContainer);
   });
 
   filter.classList.remove('invisible');
