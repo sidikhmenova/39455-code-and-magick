@@ -43,7 +43,7 @@
     var backgroundImage = new Image();
     var backgroundLoadTimeout;
 
-    backgroundImage.addEventListener('load', function(evt) {
+    backgroundImage.addEventListener('load', function() {
       backgroundImage.src = data.author.picture;
       clearTimeout(backgroundLoadTimeout);
       element.replaceChild(backgroundImage, element.children[0]);
