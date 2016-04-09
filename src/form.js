@@ -3,6 +3,7 @@
 (function() {
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
+  var formCloseButton = document.querySelector('.review-form-close');
 
   var reviewForm = document.querySelector('.review-form');
   var reviewUser = reviewForm['review-name'];
@@ -23,6 +24,11 @@
     formContainer.classList.remove('invisible');
     reviewText.required = reviewMark.value < 3;
     formValidation();
+  });
+
+  formCloseButton.addEventListener('click', function(evt) {
+    evt.preventDefault();
+    formContainer.classList.add('invisible');
   });
 
   // Обработчик клика на блок с оценками
