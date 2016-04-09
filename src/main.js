@@ -6,3 +6,4 @@
 require('./form');
 require('./game');
 require('./check');
+require('./reviews');
