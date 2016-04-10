@@ -42,15 +42,14 @@
     container.appendChild(element);
 
     var backgroundImage = new Image();
-    backgroundImage.alt = 'Отзыв пользоватедя ' + data.author.name + ' об игре Code & Magick';
-    backgroundImage.title = data.author.name;
     var backgroundLoadTimeout;
 
     backgroundImage.addEventListener('load', function() {
-      backgroundImage.src = data.author.picture;
       clearTimeout(backgroundLoadTimeout);
       element.replaceChild(backgroundImage, element.children[0]);
       backgroundImage.classList.add('review-author');
+      backgroundImage.alt = 'Отзыв пользоватедя ' + data.author.name + ' об игре Code & Magick';
+      backgroundImage.title = data.author.name;
       backgroundImage.width = 124;
       backgroundImage.height = 124;
     });
