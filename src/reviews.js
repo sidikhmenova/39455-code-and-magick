@@ -12,7 +12,6 @@
   var sectionReviews = document.querySelector('.reviews');
   var cloneElement;
   var reviews;
-  var activeFilter = 'reviews-all';
 
   filterList.classList.add('invisible');
 
@@ -109,45 +108,46 @@
     sectionReviews.classList.add('reviews-load-failure');
   }
 
-  /** @param {Array.<Object>} reviews */
-  var renderReview = function(reviews) {
+  /** @param {Array.<Object>} data */
+  var renderReview = function(data) {
     reviewContainer.innerHTML = '';
 
-    reviews.forEach(function(reviewItem) {
+    data.forEach(function(reviewItem) {
       getReviewElement(reviewItem, reviewContainer);
     });
   };
 
   // Обработчик клика на блок с оценками
   filterList.addEventListener('change', function() {
-    console.log(filterItem.value);
     setActiveFilter(filterItem.value);
   });
 
   function setActiveFilter(id) {
-    if (activeFilter === id) {
-      return;
-    }
-
     var filteredReviews = reviews.slice(0);
-    console.log(reviews);
     switch (id) {
+      case 'reviews-all':
+        break;
+      // показывает список отзывов, оставленных за две недели, отсортированных по убыванию даты
       case 'reviews-recent':
-        // показывает список отзывов, оставленных за две недели, отсортированных по убыванию даты
         filteredReviews = filteredReviews.sort(function(a, b) {
           return b.date - a.date;
         });
-        //// фильтруем массив с датами и отбираем изображения за 2 недели
-        //filteredReviews = filteredReviews.filter(selectedDay);
+        filteredReviews = filteredReviews.filter(selectedDay);
         break;
+      //  с рейтингом не ниже 3, отсортированные по убыванию рейтинга
       case 'reviews-good':
-        //  с рейтингом не ниже 3, отсортированные по убыванию рейтинга
+        filteredReviews = filteredReviews.filter(function(a) {
+          return a.rating > 2;
+        });
         filteredReviews = filteredReviews.sort(function(a, b) {
           return b.rating - a.rating;
         });
         break;
+      //  с рейтингом не выше 2, отсортированные по возрастанию рейтинга
       case 'reviews-bad':
-        //  с рейтингом не выше 2, отсортированные по возрастанию рейтинга
+        filteredReviews = filteredReviews.filter(function(a) {
+          return a.rating < 3;
+        });
         filteredReviews = filteredReviews.sort(function(a, b) {
           return a.rating - b.rating;
         });
@@ -163,21 +163,18 @@
     renderReview(filteredReviews);
   }
 
-  //var lastDate = new Date();
-  //var lastMonth = lastDate.getMonth();
-  //lastMonth = lastMonth - 3;
-  //lastDate.setMonth(lastMonth);
-  //
-  //// Функция анализа даты публикации
-  //function selectedDay(date) {
-  //  // делаем выборку за последние 3 месяца
-  //  var pictureDate = new Date(date.date);
-  //  return pictureDate > lastDate;
-  //}
+  var lastDate = new Date();
+  lastDate.setDate(lastDate.getDate() - 14);
+
+  // Функция анализа даты публикации
+  function selectedDay(date) {
+    // делаем выборку за последние 3 месяца
+    var pictureDate = new Date(date.date);
+    return pictureDate > lastDate;
+  }
 
   getReviewList(function(loadedReviews) {
     reviews = loadedReviews;
-    console.log(reviews);
     renderReview(reviews);
   });
 
