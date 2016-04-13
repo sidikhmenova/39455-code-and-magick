@@ -131,7 +131,11 @@
         filteredReviews = filteredReviews.sort(function(a, b) {
           return b.date - a.date;
         });
-        filteredReviews = filteredReviews.filter(selectedDay);
+        filteredReviews = filteredReviews.filter(function(a) {
+          var lastDate = new Date();
+          lastDate.setDate(lastDate.getDate() - 14);
+          return a.date > lastDate;
+        });
         break;
       //  с рейтингом не ниже 3, отсортированные по убыванию рейтинга
       case 'reviews-good':
@@ -160,16 +164,6 @@
     }
 
     renderReview(filteredReviews);
-  }
-
-  var lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 14);
-
-  // Функция анализа даты публикации
-  function selectedDay(date) {
-    // делаем выборку за последние 3 месяца
-    var pictureDate = new Date(date.date);
-    return pictureDate > lastDate;
   }
 
   getReviewList(function(loadedReviews) {
