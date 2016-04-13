@@ -45,7 +45,7 @@
    * @param {HTMLElement} container
    * @return {HTMLElement}
    */
-  var getReviewElement = function(data, container) {
+  function getReviewElement(data, container) {
     // Клонируем шаблонный элемент и заполняем элементы отеля данными из объекта data
     var element = cloneElement.cloneNode(true);
     element.querySelector('.review-text').textContent = data.description;
@@ -86,9 +86,9 @@
     reviewRatingBlock.classList.add('review-rating-' + transRating[rating - 1]);
 
     return element;
-  };
+  }
 
-  var getReviewList = function(callback) {
+  function getReviewList(callback) {
     var xhr = new XMLHttpRequest();
 
     /** @param {ProgressEvent} */
@@ -110,26 +110,20 @@
 
     xhr.open('GET', REVIEW_LOAD_URL);
     xhr.send();
-  };
+  }
 
-  var isBottomNear = function() {
-    var footerCoordinates = document.querySelector('footer');
-    var footerPosition = footerCoordinates.getBoundingClientRect();
-    return footerPosition.top - window.innerHeight <= 0;
-  };
-
-  var isNextPageAvailable = function(reviewItem, pageNum, pageSize) {
+  function isNextPageAvailable(reviewItem, pageNum, pageSize) {
     return pageNum < Math.floor(reviewItem.length / pageSize);
-  };
+  }
 
-  var btnMoreActive = function() {
+  function btnMoreActive() {
     buttonMore.addEventListener('click', function() {
-      if (isBottomNear() && isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
+      if (isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
         pageNumber++;
         renderReview(filteredReviews, pageNumber);
       }
     });
-  };
+  }
 
   // Функция, возвращающая ошибку
   function reviewsFailure() {
@@ -141,7 +135,7 @@
    * @param {number} page
    * @param {boolean=} replace
    * */
-  var renderReview = function(data, page, replace) {
+  function renderReview(data, page, replace) {
     if (replace) {
       reviewContainer.innerHTML = '';
     }
@@ -155,12 +149,12 @@
       getReviewElement(reviewItem, reviewContainer);
     });
 
-    if ( to < data.length) {
+    if (isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
       buttonMore.classList.remove('invisible');
     } else {
       buttonMore.classList.add('invisible');
     }
-  };
+  }
 
   filterList.addEventListener('change', function() {
     setActiveFilter(filterItem.value);
