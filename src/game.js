@@ -744,6 +744,35 @@
     }
   };
 
+  var headerPosition = 400;
+
+  var cloudBlock = document.querySelector('.header-clouds');
+  var cloudPosition;
+  var gameBlock = document.querySelector('.demo');
+  var gamePosition;
+
+  window.addEventListener('scroll', function() {
+    var scrollTimeout;
+
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(moveCloud, 100);
+  });
+
+  function moveCloud() {
+    cloudPosition = cloudBlock.getBoundingClientRect();
+    gamePosition = gameBlock.getBoundingClientRect();
+
+    var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);
+    var isGameAvailable = window.innerHeight - (gamePosition.height - gamePosition.top);
+
+    if (isCloudAvailable > 0 ) {
+      cloudBlock.style.backgroundPosition = headerPosition + cloudPosition.top + 'px';
+    } else if (isCloudAvailable < cloudPosition.height && isGameAvailable < gamePosition.height) {
+      cloudBlock.style.backgroundPosition = headerPosition;
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }
+  }
+
   window.Game = Game;
   window.Game.Verdict = Verdict;
 
