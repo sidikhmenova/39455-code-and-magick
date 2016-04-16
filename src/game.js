@@ -744,31 +744,31 @@
     }
   };
 
-  var headerPosition = 400;
-
   var cloudBlock = document.querySelector('.header-clouds');
-  var cloudPosition;
   var gameBlock = document.querySelector('.demo');
-  var gamePosition;
 
   window.addEventListener('scroll', function() {
     var scrollTimeout;
 
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(moveCloud, 100);
+    scrollTimeout = setTimeout(stopGame, 100);
+    moveCloud();
   });
 
   function moveCloud() {
-    cloudPosition = cloudBlock.getBoundingClientRect();
-    gamePosition = gameBlock.getBoundingClientRect();
-
+    var cloudPosition = cloudBlock.getBoundingClientRect();
     var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);
-    var isGameAvailable = window.innerHeight - (gamePosition.height - gamePosition.top);
 
     if (isCloudAvailable > 0 ) {
-      cloudBlock.style.backgroundPosition = headerPosition + cloudPosition.top + 'px';
-    } else if (isCloudAvailable < cloudPosition.height && isGameAvailable < gamePosition.height) {
-      cloudBlock.style.backgroundPosition = headerPosition;
+      cloudBlock.style.backgroundPositionX = -window.pageYOffset + 'px';
+    }
+  }
+
+  function stopGame() {
+    var gamePosition = gameBlock.getBoundingClientRect();
+    var isGameAvailable = window.innerHeight - (gamePosition.height - gamePosition.top);
+
+    if (isGameAvailable < gamePosition.height) {
       game.setGameStatus(window.Game.Verdict.PAUSE);
     }
   }
