@@ -746,7 +746,8 @@
 
   var cloudBlock = document.querySelector('.header-clouds');
   var gameBlock = document.querySelector('.demo');
-  var headerPosition = 150;
+
+  moveCloud();
 
   window.addEventListener('scroll', function() {
     var scrollTimeout;
@@ -759,11 +760,9 @@
   function moveCloud() {
     var cloudPosition = cloudBlock.getBoundingClientRect();
     var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);
-    console.log(isCloudAvailable);
 
-    if (isCloudAvailable > -300 ) {
-      //cloudBlock.style.backgroundPosition = -window.pageYOffset + 'px';
-      cloudBlock.style.backgroundPosition = headerPosition + cloudPosition.top + 'px';
+    if (isCloudAvailable > -cloudPosition.height ) {
+      cloudBlock.style.backgroundPosition = -window.pageYOffset + 'px';
     }
   }
 
