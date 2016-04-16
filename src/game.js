@@ -747,8 +747,6 @@
   var cloudBlock = document.querySelector('.header-clouds');
   var gameBlock = document.querySelector('.demo');
 
-  moveCloud();
-
   window.addEventListener('scroll', function() {
     var scrollTimeout;
 
@@ -782,4 +780,6 @@
   setTimeout(game.initializeLevelAndStart(), 10000);
   //game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  moveCloud();
 })();
