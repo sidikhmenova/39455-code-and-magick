@@ -746,10 +746,9 @@
 
   var cloudBlock = document.querySelector('.header-clouds');
   var gameBlock = document.querySelector('.demo');
+  var scrollTimeout;
 
   window.addEventListener('scroll', function() {
-    var scrollTimeout;
-
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(stopGame, 100);
     moveCloud();
