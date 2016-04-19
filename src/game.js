@@ -744,6 +744,34 @@
     }
   };
 
+  var cloudBlock = document.querySelector('.header-clouds');
+  var gameBlock = document.querySelector('.demo');
+  var scrollTimeout;
+
+  window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(stopGame, 100);
+    moveCloud();
+  });
+
+  function moveCloud() {
+    var cloudPosition = cloudBlock.getBoundingClientRect();
+    var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);
+
+    if (isCloudAvailable > -cloudPosition.height ) {
+      cloudBlock.style.backgroundPosition = -window.pageYOffset + 'px';
+    }
+  }
+
+  function stopGame() {
+    var gamePosition = gameBlock.getBoundingClientRect();
+    var isGameAvailable = window.innerHeight - (gamePosition.height - gamePosition.top);
+
+    if (isGameAvailable < gamePosition.height) {
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }
+  }
+
   window.Game = Game;
   window.Game.Verdict = Verdict;
 
@@ -751,4 +779,6 @@
   setTimeout(game.initializeLevelAndStart(), 10000);
   //game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  moveCloud();
 })();
