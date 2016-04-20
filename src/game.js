@@ -744,24 +744,16 @@
     }
   };
 
-  var cloudBlock = document.querySelector('.header-clouds');
   var gameBlock = document.querySelector('.demo');
+  var moveCloud = require('./game_parallax');
   var scrollTimeout;
 
   window.addEventListener('scroll', function() {
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(stopGame, 100);
+
     moveCloud();
   });
-
-  function moveCloud() {
-    var cloudPosition = cloudBlock.getBoundingClientRect();
-    var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);
-
-    if (isCloudAvailable > -cloudPosition.height ) {
-      cloudBlock.style.backgroundPosition = -window.pageYOffset + 'px';
-    }
-  }
 
   function stopGame() {
     var gamePosition = gameBlock.getBoundingClientRect();
