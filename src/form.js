@@ -10,9 +10,10 @@
   var reviewText = reviewForm['review-text'];
   var reviewMark = reviewForm['review-mark'];
   var reviewGroupMark = document.querySelector('.review-form-group-mark');
-
-  var formValidation = require('./form_validation');
-  var getDateExpire = require('./form_setCookies');
+  var reviewSubmit = document.querySelector('.review-submit');
+  var reviewFields = document.querySelector('.review-fields');
+  var reviewFName = document.querySelector('.review-fields-name');
+  var reviewFText = document.querySelector('.review-fields-text');
 
   var cookies = require('browser-cookies');
   reviewUser.value = cookies.get('reviewUser');
@@ -36,6 +37,16 @@
     formValidation();
   });
 
+  function formValidation() {
+    var StatusRName = reviewUser.value.length > 0;
+    var StatusRText = !reviewText.required || reviewText.value.length > 0;
+    var StateValidation = StatusRName && StatusRText;
+    reviewSubmit.disabled = !StateValidation;
+    reviewFields.classList.toggle('invisible', StateValidation);
+    reviewFName.classList.toggle('invisible', StatusRName);
+    reviewFText.classList.toggle('invisible', StatusRText);
+  }
+
   // Обработчик события нажатия клавиши
   reviewForm.addEventListener('keyup', function() {
     formValidation();
@@ -51,26 +62,26 @@
     this.submit();
   });
 
-  // //Вычисояем кол-во дней для хранения Куки
-  // //Вычесляется как:
-  // //1) Определяем кол-во дней, прошедших с последнего дня рождения
-  // //2) Прибавляем к текущей дате
-  //function getDateExpire() {
-  //  var today = new Date();
-  //  var dateBD = new Date(today.getFullYear(), 3, 8);
-  //  var dateExp;
-  //
-  //  if (dateBD > today) {
-  //    dateBD.setFullYear(dateBD.getFullYear() - 1);
-  //    dateExp = +today - +dateBD;
-  //  } else {
-  //    dateExp = +today - +dateBD;
-  //  }
-  //
-  //  var dateToExpire = +Date.now() + +dateExp;
-  //
-  //  return new Date(dateToExpire).toUTCString();
-  //}
+   //Вычисояем кол-во дней для хранения Куки
+   //Вычесляется как:
+   //1) Определяем кол-во дней, прошедших с последнего дня рождения
+   //2) Прибавляем к текущей дате
+  function getDateExpire() {
+    var today = new Date();
+    var dateBD = new Date(today.getFullYear(), 3, 8);
+    var dateExp;
+
+    if (dateBD > today) {
+      dateBD.setFullYear(dateBD.getFullYear() - 1);
+      dateExp = +today - +dateBD;
+    } else {
+      dateExp = +today - +dateBD;
+    }
+
+    var dateToExpire = +Date.now() + +dateExp;
+
+    return new Date(dateToExpire).toUTCString();
+  }
 
 
 })();
