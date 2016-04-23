@@ -3,7 +3,7 @@
  */
 'use strict';
 
-require('./form');
-require('./game');
+require('./form/form');
+require('./game/game');
 require('./check');
-require('./reviews');
+require('./reviews/reviews');
