@@ -106,4 +106,4 @@ window.addEventListener('keydown', function(esc) {
 });
 
 module.exports = getPhotoGallery;
-module.exports = showGallery
+module.exports = showGallery;
