@@ -23,7 +23,7 @@ if ('content' in template) {
  * @param {HTMLElement} container
  * @return {HTMLElement}
  */
-function getReviewElement(data, container) {
+function templates(data, container) {
   // Клонируем шаблонный элемент и заполняем элементы отеля данными из объекта data
   var element = cloneElement.cloneNode(true);
   element.querySelector('.review-text').textContent = data.description;
@@ -38,7 +38,7 @@ function getReviewElement(data, container) {
     clearTimeout(backgroundLoadTimeout);
     element.replaceChild(backgroundImage, element.children[0]);
     backgroundImage.classList.add('review-author');
-    backgroundImage.alt = 'Отзыв пользоватедя ' + data.author.name + ' об игре Code & Magick';
+    backgroundImage.alt = 'Отзыв пользователя ' + data.author.name + ' об игре Code & Magick';
     backgroundImage.title = data.author.name;
     backgroundImage.width = 124;
     backgroundImage.height = 124;
@@ -66,4 +66,4 @@ function getReviewElement(data, container) {
   return element;
 }
 
-module.exports = getReviewElement;
+module.exports = templates;

@@ -3,18 +3,16 @@
  */
 'use strict';
 
-var reviewForm = document.querySelector('.review-form');
-var reviewUser = reviewForm['review-name'];
-var reviewText = reviewForm['review-text'];
-
 var reviewSubmit = document.querySelector('.review-submit');
 var reviewFields = document.querySelector('.review-fields');
 var reviewFName = document.querySelector('.review-fields-name');
 var reviewFText = document.querySelector('.review-fields-text');
 
-function formValidation() {
-  var StatusRName = reviewUser.value.length > 0;
-  var StatusRText = !reviewText.required || reviewText.value.length > 0;
+function formValidation(markVl, userVl, textVl) {
+  textVl.required = markVl.value < 3;
+
+  var StatusRName = userVl.value.length > 0;
+  var StatusRText = !textVl.required || textVl.value.length > 0;
   var StateValidation = StatusRName && StatusRText;
   reviewSubmit.disabled = !StateValidation;
   reviewFields.classList.toggle('invisible', StateValidation);
