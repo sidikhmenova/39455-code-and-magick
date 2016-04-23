@@ -6,7 +6,6 @@
 
 var getReviewElement = require('../reviews/templates');
 var filter = require('../reviews/filter');
-var getPageReview = require('../reviews/paigination');
 
 var filterList = document.querySelector('.reviews-filter');
 var filterItem = filterList['reviews'];
@@ -17,6 +16,9 @@ var defaultFilter = 'reviews-all';
 var reviews;
 
 filterList.classList.add('invisible');
+
+/** @constant {number} */
+var PAGE_SIZE = 3;
 
 /** @constant {number} */
 var IMAGE_LOAD_TIMEOUT = 10000;
@@ -53,10 +55,16 @@ function getReviewList(callback) {
   xhr.send();
 }
 
+function isNextPageAvailable(reviewItem, pageNum, pageSize) {
+  return pageNum < Math.ceil(reviewItem.length / pageSize);
+}
+
 function btnMoreActive() {
   buttonMore.addEventListener('click', function() {
-    pageNumber++;
-    renderReview(filteredReviews, pageNumber);
+    if (isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
+      pageNumber++;
+      renderReview(filteredReviews, pageNumber);
+    }
   });
 }
 
@@ -75,11 +83,24 @@ function renderReview(data, page, replace) {
     reviewContainer.innerHTML = '';
   }
 
-  var pageReview = getPageReview(data, page, buttonMore);
+  var from = page * PAGE_SIZE;
+  var to = from + PAGE_SIZE;
+
+  console.log(data);
+
+  var pageReview = data.slice(from, to);
+
+  console.log(pageReview);
 
   pageReview.forEach(function(reviewItem) {
     getReviewElement(reviewItem, reviewContainer);
   });
+
+  if (isNextPageAvailable(data, pageNumber + 1, PAGE_SIZE)) {
+    buttonMore.classList.remove('invisible');
+  } else {
+    buttonMore.classList.add('invisible');
+  }
 }
 
 filterList.addEventListener('change', function() {
@@ -89,7 +110,6 @@ filterList.addEventListener('change', function() {
 function setActiveFilter(id) {
   pageNumber = 0;
   filteredReviews = filter(id, reviews);
-
   renderReview(filteredReviews, pageNumber, true);
 }
 

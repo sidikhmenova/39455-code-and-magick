@@ -1,9 +1,6 @@
 /**
  * Created by Катэ on 23.04.2016.
  */
-/**
- * Created by Катэ on 22.04.2016.
- */
 
 'use strict';
 
@@ -31,8 +28,9 @@ getPhotoGallery(photos);
 
 function getPhotoGallery(pct) {
   for (var i = 0; i < pct.length; i++) {
-    galleryPicture[i] = pct[i].getAttribute('src');
+    galleryPicture[i] = pct[i].src;
   }
+  console.log(galleryPicture);
 }
 
 function showGallery(num) {
@@ -46,7 +44,7 @@ function showGallery(num) {
 }
 
 function showActivePhoto(num) {
-  mainPhoto.setAttribute('src', galleryPicture[num]);
+  mainPhoto.src = galleryPicture[num];
   spanCurrent.textContent = num + 1;
   visibleButton();
 }
@@ -55,21 +53,14 @@ function getActivePhoto(clkElement) {
   for (var i = 0; i < galleryPicture.length; i++) {
     if (galleryPicture[i] === clkElement) {
       currentNum = i;
+      return currentNum;
     }
   }
-
-  return currentNum;
 }
 
 function visibleButton() {
-  if ((currentNum + 1) === galleryPicture.length) {
-    btnNext.classList.add('invisible');
-  } else if (currentNum === 0) {
-    btnBefore.classList.add('invisible');
-  } else {
-    btnNext.classList.remove('invisible');
-    btnBefore.classList.remove('invisible');
-  }
+  btnBefore.classList.toggle('invisible', currentNum === 0);
+  btnNext.classList.toggle('invisible', (currentNum + 1) === galleryPicture.length);
 }
 
 function closeGallery() {
@@ -79,7 +70,8 @@ function closeGallery() {
 
 photoGalleryContainer.addEventListener('click', function(evt) {
   evt.preventDefault();
-  clickedElement = evt.target.attributes.src.nodeValue;
+  clickedElement = evt.target.src;
+  console.log(clickedElement);
   getActivePhoto(clickedElement);
   showGallery(currentNum);
 });
@@ -99,8 +91,8 @@ btnClose.addEventListener('click', function(evt) {
   closeGallery();
 });
 
-window.addEventListener('keydown', function(esc) {
-  if (esc.keyCode === 27) {
+window.addEventListener('keydown', function(evt) {
+  if (evt.keyCode === 27) {
     closeGallery();
   }
 });
