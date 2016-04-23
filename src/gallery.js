@@ -53,9 +53,10 @@ function getActivePhoto(clkElement) {
   for (var i = 0; i < galleryPicture.length; i++) {
     if (galleryPicture[i] === clkElement) {
       currentNum = i;
-      return currentNum;
+      break;
     }
   }
+  return currentNum;
 }
 
 function visibleButton() {
