@@ -30,7 +30,6 @@ function getPhotoGallery(pct) {
   for (var i = 0; i < pct.length; i++) {
     galleryPicture[i] = pct[i].src;
   }
-  console.log(galleryPicture);
 }
 
 function showGallery(num) {
@@ -72,7 +71,6 @@ function closeGallery() {
 photoGalleryContainer.addEventListener('click', function(evt) {
   evt.preventDefault();
   clickedElement = evt.target.src;
-  console.log(clickedElement);
   getActivePhoto(clickedElement);
   showGallery(currentNum);
 });

@@ -86,11 +86,7 @@ function renderReview(data, page, replace) {
   var from = page * PAGE_SIZE;
   var to = from + PAGE_SIZE;
 
-  console.log(data);
-
   var pageReview = data.slice(from, to);
-
-  console.log(pageReview);
 
   pageReview.forEach(function(reviewItem) {
     getReviewElement(reviewItem, reviewContainer);
