@@ -4,7 +4,6 @@
 
 'use strict';
 
-var getReviewElement = require('../reviews/templates');
 var filter = require('../reviews/filter');
 
 var filterList = document.querySelector('.reviews-filter');
@@ -14,6 +13,8 @@ var sectionReviews = document.querySelector('.reviews');
 var buttonMore = document.querySelector('.reviews-controls-more');
 var defaultFilter = 'reviews-all';
 var reviews;
+
+var Review = require('./review');
 
 filterList.classList.add('invisible');
 
@@ -28,6 +29,9 @@ var REVIEW_LOAD_URL = '//o0.github.io/assets/json/reviews.json';
 
 /** @type {Array.<Object>} */
 var filteredReviews = [];
+
+/** @type {Array.<Review>} */
+var renderedReviews = [];
 
 var pageNumber = 0;
 
@@ -80,7 +84,10 @@ function reviewsFailure() {
  * */
 function renderReview(data, page, replace) {
   if (replace) {
-    reviewContainer.innerHTML = '';
+    renderedReviews.forEach(function(reviewItem) {
+      reviewItem.remove();
+    });
+    renderedReviews = [];
   }
 
   var from = page * PAGE_SIZE;
@@ -89,7 +96,7 @@ function renderReview(data, page, replace) {
   var pageReview = data.slice(from, to);
 
   pageReview.forEach(function(reviewItem) {
-    getReviewElement(reviewItem, reviewContainer);
+    renderedReviews.push(new Review(reviewItem, reviewContainer));
   });
 
   if (isNextPageAvailable(data, pageNumber + 1, PAGE_SIZE)) {

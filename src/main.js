@@ -5,5 +5,5 @@
 
 require('./form/form');
 require('./game/game');
-require('./reviews/reviews');
+require('./reviews/index');
 require('./gallery');
