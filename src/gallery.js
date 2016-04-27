@@ -32,30 +32,29 @@ function getPhotoGallery(pct) {
   }
 }
 
-function showGallery(num) {
+function showGallery() {
   galleryContainer.classList.remove('invisible');
   spanTotal.textContent = galleryPicture.length;
 
   element = new Image();
   mainPhoto = preview.appendChild(element);
 
-  showActivePhoto(num);
+  showActivePhoto();
 }
 
-function showActivePhoto(num) {
-  mainPhoto.src = galleryPicture[num];
-  spanCurrent.textContent = num + 1;
+function showActivePhoto() {
+  mainPhoto.src = galleryPicture[currentNum];
+  spanCurrent.textContent = currentNum + 1;
   visibleButton();
 }
 
 function getActivePhoto(clkElement) {
   for (var i = 0; i < galleryPicture.length; i++) {
     if (galleryPicture[i] === clkElement) {
-      currentNum = i;
-      break;
+      return i;
     }
   }
-  return currentNum;
+  return null;
 }
 
 function visibleButton() {
@@ -71,8 +70,8 @@ function closeGallery() {
 photoGalleryContainer.addEventListener('click', function(evt) {
   evt.preventDefault();
   clickedElement = evt.target.src;
-  getActivePhoto(clickedElement);
-  showGallery(currentNum);
+  currentNum = getActivePhoto(clickedElement);
+  showGallery();
 });
 
 btnNext.addEventListener('click', function() {
