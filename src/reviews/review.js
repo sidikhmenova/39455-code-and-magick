@@ -25,13 +25,18 @@ function Review(data, container) {
   this.getReview = function() {
     // Клонируем шаблонный элемент и заполняем элементы отеля данными из объекта data
     var element = cloneElement.cloneNode(true);
+
+    var backgroundImage = new Image();
+    var backgroundLoadTimeout;
+
+    var reviewRatingBlock = element.querySelector('.review-rating');
+    var rating = data.rating;
+    var transRating = ['one', 'two', 'three', 'four', 'five'];
+
     element.querySelector('.review-text').textContent = data.description;
 
     // вставлеяем элемент в DOM
     container.appendChild(element);
-
-    var backgroundImage = new Image();
-    var backgroundLoadTimeout;
 
     backgroundImage.addEventListener('load', function() {
       clearTimeout(backgroundLoadTimeout);
@@ -54,16 +59,13 @@ function Review(data, container) {
       element.classList.add('review-load-failure');
     }, IMAGE_LOAD_TIMEOUT);
 
-
-    var reviewRatingBlock = element.querySelector('.review-rating');
-    var rating = data.rating;
-
-    var transRating = ['one', 'two', 'three', 'four', 'five'];
-
     reviewRatingBlock.classList.add('review-rating-' + transRating[rating - 1]);
 
     return element;
   };
+
+  this.element = this.getReview();
+  this.element.addEventListener('click', this.onClickRQuizAnswer);
 
   this.onClickRQuizAnswer = function(evt) {
     if (evt.target.classList.contains(quizAnswer)) {
@@ -76,9 +78,6 @@ function Review(data, container) {
     this.element.removeEventListener('click', this.onClickRQuizAnswer());
     this.element.parentNode.removeChild(this.element);
   };
-
-  this.element = this.getReview(this.data, container);
-  this.element.addEventListener('click', this.onClickRQuizAnswer);
 }
 
 module.exports = Review;

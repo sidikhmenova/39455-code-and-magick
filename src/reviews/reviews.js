@@ -14,7 +14,7 @@ var buttonMore = document.querySelector('.reviews-controls-more');
 var defaultFilter = 'reviews-all';
 var reviews;
 
-var Review = require('./review');
+var Review = require('../reviews/review');
 
 filterList.classList.add('invisible');
 
