@@ -4,96 +4,126 @@
 
 'use strict';
 
-var galleryContainer = document.querySelector('.overlay-gallery');
-var preview = document.querySelector('.overlay-gallery-preview');
+/** @constructor */
+function Gallery() {
+  this.galleryContainer = document.querySelector('.overlay-gallery');
+  this.preview = document.querySelector('.overlay-gallery-preview');
 
-var photoGalleryContainer = document.querySelector('.photogallery');
-var photos = document.querySelectorAll('.photogallery img');
-var clickedElement;
-var mainPhoto;
-var element;
+  this.photoGalleryContainer = document.querySelector('.photogallery');
+  this.photos = document.querySelectorAll('.photogallery img');
 
-var btnNext = document.querySelector('.overlay-gallery-control-right');
-var btnBefore = document.querySelector('.overlay-gallery-control-left');
-var btnClose = document.querySelector('.overlay-gallery-close');
+  this.clickedElement = null;
+  this.mainPhoto = null;
+  this.element = null;
 
-var spanCurrent = document.querySelector('.preview-number-current');
-var spanTotal = document.querySelector('.preview-number-total');
+  this.btnNext = document.querySelector('.overlay-gallery-control-right');
+  this.btnBefore = document.querySelector('.overlay-gallery-control-left');
+  this.btnClose = document.querySelector('.overlay-gallery-close');
 
-/** @type {Array.<string>} */
-var galleryPicture = [];
-var currentNum = 1;
+  this.spanCurrent = document.querySelector('.preview-number-current');
+  this.spanTotal = document.querySelector('.preview-number-total');
 
-getPhotoGallery(photos);
+  this.currentNum = 1;
 
-function getPhotoGallery(pct) {
-  for (var i = 0; i < pct.length; i++) {
-    galleryPicture[i] = pct[i].src;
-  }
-}
+  var self = this;
 
-function showGallery() {
-  galleryContainer.classList.remove('invisible');
-  spanTotal.textContent = galleryPicture.length;
+  this.galleryPicture = [];
 
-  element = new Image();
-  mainPhoto = preview.appendChild(element);
-
-  showActivePhoto();
-}
-
-function showActivePhoto() {
-  mainPhoto.src = galleryPicture[currentNum];
-  spanCurrent.textContent = currentNum + 1;
-  visibleButton();
-}
-
-function getActivePhoto(clkElement) {
-  for (var i = 0; i < galleryPicture.length; i++) {
-    if (galleryPicture[i] === clkElement) {
-      return i;
+  /**
+   * @param {Array} pct
+   */
+  this.getPhotoGallery = function(pct) {
+    for (var i = 0; i < pct.length; i++) {
+      this.galleryPicture[i] = pct[i].src;
     }
-  }
-  return null;
+  };
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  this.initialClick = function(evt) {
+    evt.preventDefault();
+    self.clickedElement = evt.target.src;
+    self.currentNum = self.getActivePhoto(self.clickedElement);
+    self.showGallery();
+  };
+
+  /**
+   * @param {string} clkElement
+   * @returns {number}
+   */
+  this.getActivePhoto = function(clkElement) {
+    for (var i = 0; i < self.galleryPicture.length; i++) {
+      if (self.galleryPicture[i] === clkElement) {
+        return i;
+      }
+    }
+    return null;
+  };
+
+  this.showGallery = function() {
+    this.galleryContainer.classList.remove('invisible');
+    this.spanTotal.textContent = self.galleryPicture.length;
+
+    this.element = new Image();
+    this.mainPhoto = this.preview.appendChild(this.element);
+
+    this.btnNext.addEventListener('click', self.showNextPage);
+    this.btnBefore.addEventListener('click', self.showBeforePage);
+    this.btnClose.addEventListener('click', self.onCloseClickGallery);
+    window.addEventListener('keydown', self.onCloseKeydownGallery);
+
+    self.showActivePhoto();
+  };
+
+  this.showActivePhoto = function() {
+    this.mainPhoto.src = self.galleryPicture[self.currentNum];
+    this.spanCurrent.textContent = self.currentNum + 1;
+    self.visibleButton();
+  };
+
+  this.visibleButton = function() {
+    this.btnBefore.classList.toggle('invisible', self.currentNum === 0);
+    this.btnNext.classList.toggle('invisible', (self.currentNum + 1) === self.galleryPicture.length);
+  };
+
+  this.closeGallery = function() {
+    this.mainPhoto = this.preview.removeChild(this.element);
+
+    this.btnNext.removeEventListener('click', self.showNextPage);
+    this.btnBefore.removeEventListener('click', self.showBeforePage);
+    this.btnClose.removeEventListener('click', self.onCloseClickGallery);
+    window.removeEventListener('keydown', self.onCloseKeydownGallery);
+
+    this.galleryContainer.classList.add('invisible');
+  };
+
+  this.showNextPage = function() {
+    ++self.currentNum;
+    self.showActivePhoto();
+  };
+
+  this.showBeforePage = function() {
+    --self.currentNum;
+    self.showActivePhoto();
+  };
+
+  this.onCloseClickGallery = function() {
+    self.closeGallery();
+  };
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  this.onCloseKeydownGallery = function(evt) {
+    if (evt.keyCode === 27) {
+      self.closeGallery();
+    }
+  };
+
+  this.element = this.getPhotoGallery(this.photos);
+
+  this.photoGalleryContainer.addEventListener('click', self.initialClick);
 }
 
-function visibleButton() {
-  btnBefore.classList.toggle('invisible', currentNum === 0);
-  btnNext.classList.toggle('invisible', (currentNum + 1) === galleryPicture.length);
-}
-
-function closeGallery() {
-  mainPhoto = preview.removeChild(element);
-  galleryContainer.classList.add('invisible');
-}
-
-photoGalleryContainer.addEventListener('click', function(evt) {
-  evt.preventDefault();
-  clickedElement = evt.target.src;
-  currentNum = getActivePhoto(clickedElement);
-  showGallery();
-});
-
-btnNext.addEventListener('click', function() {
-  ++currentNum;
-  showActivePhoto(currentNum);
-});
-
-btnBefore.addEventListener('click', function() {
-  --currentNum;
-  showActivePhoto(currentNum);
-});
-
-btnClose.addEventListener('click', function(evt) {
-  evt.preventDefault();
-  closeGallery();
-});
-
-window.addEventListener('keydown', function(evt) {
-  if (evt.keyCode === 27) {
-    closeGallery();
-  }
-});
-
-module.exports = getPhotoGallery;
-module.exports = showGallery;
+module.exports = new Gallery();
