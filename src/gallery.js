@@ -4,6 +4,7 @@
 
 'use strict';
 
+/** @constructor */
 function Gallery() {
   this.galleryContainer = document.querySelector('.overlay-gallery');
   this.preview = document.querySelector('.overlay-gallery-preview');
@@ -11,9 +12,9 @@ function Gallery() {
   this.photoGalleryContainer = document.querySelector('.photogallery');
   this.photos = document.querySelectorAll('.photogallery img');
 
-  this.clickedElement;
-  this.mainPhoto;
-  this.element;
+  this.clickedElement = null;
+  this.mainPhoto = null;
+  this.element = null;
 
   this.btnNext = document.querySelector('.overlay-gallery-control-right');
   this.btnBefore = document.querySelector('.overlay-gallery-control-left');
@@ -28,19 +29,29 @@ function Gallery() {
 
   this.galleryPicture = [];
 
+  /**
+   * @param {Array} pct
+   */
   this.getPhotoGallery = function(pct) {
     for (var i = 0; i < pct.length; i++) {
       self.galleryPicture[i] = pct[i].src;
     }
   };
 
+  /**
+   * @param {KeyboardEvent} evt
+   */
   this.initialClick = function(evt) {
     evt.preventDefault();
     this.clickedElement = evt.target.src;
     this.currentNum = self.getActivePhoto(this.clickedElement);
-    self.showGallery();
+    self.showGallery(this.currentNum);
   };
 
+  /**
+   * @param {string} clkElement
+   * @returns {number}
+   */
   this.getActivePhoto = function(clkElement) {
     for (var i = 0; i < self.galleryPicture.length; i++) {
       if (self.galleryPicture[i] === clkElement) {
@@ -50,7 +61,7 @@ function Gallery() {
     return null;
   };
 
-  this.showGallery = function() {
+  this.showGallery = function(num) {
     this.galleryContainer.classList.remove('invisible');
     this.spanTotal.textContent = self.galleryPicture.length;
 
@@ -60,14 +71,14 @@ function Gallery() {
     this.btnNext.addEventListener('click', self.showNextPage);
     this.btnBefore.addEventListener('click', self.showBeforePage);
     this.btnClose.addEventListener('click', self.onCloseClickGallery);
-    this.window.addEventListener('keydown', self.onCloseKeydownGallery);
+    window.addEventListener('keydown', self.onCloseKeydownGallery);
 
-    self.showActivePhoto();
+    self.showActivePhoto(num);
   };
 
-  this.showActivePhoto = function() {
-    this.mainPhoto.src = self.galleryPicture[this.currentNum];
-    this.spanCurrent.textContent = this.currentNum + 1;
+  this.showActivePhoto = function(num) {
+    this.mainPhoto.src = self.galleryPicture[num];
+    this.spanCurrent.textContent = num + 1;
     self.visibleButton();
   };
 
@@ -101,6 +112,9 @@ function Gallery() {
     self.closeGallery();
   };
 
+  /**
+   * @param {KeyboardEvent} evt
+   */
   this.onCloseKeydownGallery = function(evt) {
     if (evt.keyCode === 27) {
       self.closeGallery();
