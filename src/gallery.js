@@ -34,7 +34,7 @@ function Gallery() {
    */
   this.getPhotoGallery = function(pct) {
     for (var i = 0; i < pct.length; i++) {
-      self.galleryPicture[i] = pct[i].src;
+      this.galleryPicture[i] = pct[i].src;
     }
   };
 
@@ -43,9 +43,9 @@ function Gallery() {
    */
   this.initialClick = function(evt) {
     evt.preventDefault();
-    this.clickedElement = evt.target.src;
-    this.currentNum = self.getActivePhoto(this.clickedElement);
-    self.showGallery(this.currentNum);
+    self.clickedElement = evt.target.src;
+    self.currentNum = self.getActivePhoto(self.clickedElement);
+    self.showGallery();
   };
 
   /**
@@ -61,7 +61,7 @@ function Gallery() {
     return null;
   };
 
-  this.showGallery = function(num) {
+  this.showGallery = function() {
     this.galleryContainer.classList.remove('invisible');
     this.spanTotal.textContent = self.galleryPicture.length;
 
@@ -73,18 +73,18 @@ function Gallery() {
     this.btnClose.addEventListener('click', self.onCloseClickGallery);
     window.addEventListener('keydown', self.onCloseKeydownGallery);
 
-    self.showActivePhoto(num);
+    self.showActivePhoto();
   };
 
-  this.showActivePhoto = function(num) {
-    this.mainPhoto.src = self.galleryPicture[num];
-    this.spanCurrent.textContent = num + 1;
+  this.showActivePhoto = function() {
+    this.mainPhoto.src = self.galleryPicture[self.currentNum];
+    this.spanCurrent.textContent = self.currentNum + 1;
     self.visibleButton();
   };
 
   this.visibleButton = function() {
-    this.btnBefore.classList.toggle('invisible', this.currentNum === 0);
-    this.btnNext.classList.toggle('invisible', (this.currentNum + 1) === self.galleryPicture.length);
+    this.btnBefore.classList.toggle('invisible', self.currentNum === 0);
+    this.btnNext.classList.toggle('invisible', (self.currentNum + 1) === self.galleryPicture.length);
   };
 
   this.closeGallery = function() {
@@ -99,13 +99,13 @@ function Gallery() {
   };
 
   this.showNextPage = function() {
-    ++this.currentNum;
-    self.showActivePhoto(this.currentNum);
+    ++self.currentNum;
+    self.showActivePhoto();
   };
 
   this.showBeforePage = function() {
-    --this.currentNum;
-    self.showActivePhoto(this.currentNum);
+    --self.currentNum;
+    self.showActivePhoto();
   };
 
   this.onCloseClickGallery = function() {
