@@ -65,7 +65,7 @@ function Gallery() {
   };
 
   this.hashChange = function() {
-    var galleryHash = window.location.href.match(this.RE);
+    var galleryHash = window.location.href.match(self.RE);
 
     if (galleryHash && self.isShowGallery) {
       self.showActivePhoto();
