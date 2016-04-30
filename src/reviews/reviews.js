@@ -118,6 +118,7 @@ function setActiveFilter(id) {
   renderReview(filteredReviews, pageNumber, true);
 }
 
+function fcallback(loadedReviews) {
   reviews = loadedReviews;
   defaultFilter = localStorage.getItem(localFilter);
   filterList.elements['reviews'].value = defaultFilter;
@@ -125,5 +126,6 @@ function setActiveFilter(id) {
   btnMoreActive();
 }
 
+getReviewList(fcallback);
 
 filterList.classList.remove('invisible');
