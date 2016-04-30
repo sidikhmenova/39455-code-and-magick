@@ -13,6 +13,7 @@ var sectionReviews = document.querySelector('.reviews');
 var buttonMore = document.querySelector('.reviews-controls-more');
 var defaultFilter = 'reviews-all';
 var reviews;
+var localFilter = 'id';
 
 var Review = require('../reviews/review');
 
@@ -113,13 +114,16 @@ filterList.addEventListener('change', function() {
 function setActiveFilter(id) {
   pageNumber = 0;
   filteredReviews = filter(id, reviews);
+  localStorage.setItem(localFilter, id);
   renderReview(filteredReviews, pageNumber, true);
 }
 
-getReviewList(function(loadedReviews) {
   reviews = loadedReviews;
+  defaultFilter = localStorage.getItem(localFilter);
+  filterList.elements['reviews'].value = defaultFilter;
   setActiveFilter(defaultFilter);
   btnMoreActive();
-});
+}
+
 
 filterList.classList.remove('invisible');
