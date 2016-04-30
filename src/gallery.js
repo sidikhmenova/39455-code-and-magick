@@ -15,6 +15,9 @@ function Gallery() {
   this.clickedElement = null;
   this.mainPhoto = null;
   this.element = null;
+  this.isShowGallery = null;
+
+  this.RE = /#photo\/(\S+)/;
 
   this.btnNext = document.querySelector('.overlay-gallery-control-right');
   this.btnBefore = document.querySelector('.overlay-gallery-control-left');
@@ -34,7 +37,7 @@ function Gallery() {
    */
   this.getPhotoGallery = function(pct) {
     for (var i = 0; i < pct.length; i++) {
-      this.galleryPicture[i] = pct[i].src;
+      this.galleryPicture[i] = pct[i].getAttribute('src');
     }
   };
 
@@ -43,9 +46,9 @@ function Gallery() {
    */
   this.initialClick = function(evt) {
     evt.preventDefault();
-    self.clickedElement = evt.target.src;
+    self.clickedElement = evt.target.getAttribute('src');
     self.currentNum = self.getActivePhoto(self.clickedElement);
-    self.showGallery();
+    location.hash = '#photo/' + self.galleryPicture[self.currentNum];
   };
 
   /**
@@ -61,25 +64,45 @@ function Gallery() {
     return null;
   };
 
+  this.hashChange = function() {
+    var galleryHash = window.location.href.match(this.RE);
+
+    if (galleryHash && self.isShowGallery) {
+      self.showActivePhoto();
+    } else if(galleryHash && !self.isShowGallery) {
+      self.showGallery();
+    } else if(!galleryHash && self.isShowGallery) {
+      self.closeGallery();
+    }
+  };
+
   this.showGallery = function() {
-    this.galleryContainer.classList.remove('invisible');
-    this.spanTotal.textContent = self.galleryPicture.length;
+    self.isShowGallery = true;
 
-    this.element = new Image();
-    this.mainPhoto = this.preview.appendChild(this.element);
+    self.galleryContainer.classList.remove('invisible');
+    self.spanTotal.textContent = self.galleryPicture.length;
 
-    this.btnNext.addEventListener('click', self.showNextPage);
-    this.btnBefore.addEventListener('click', self.showBeforePage);
-    this.btnClose.addEventListener('click', self.onCloseClickGallery);
+    self.element = new Image();
+    self.mainPhoto = self.preview.appendChild(self.element);
+
+    self.btnNext.addEventListener('click', self.showNextPage);
+    self.btnBefore.addEventListener('click', self.showBeforePage);
+    self.btnClose.addEventListener('click', self.onCloseClickGallery);
     window.addEventListener('keydown', self.onCloseKeydownGallery);
 
     self.showActivePhoto();
   };
 
   this.showActivePhoto = function() {
-    this.mainPhoto.src = self.galleryPicture[self.currentNum];
-    this.spanCurrent.textContent = self.currentNum + 1;
-    self.visibleButton();
+    self.currentNum = self.getActivePhoto(window.location.href.match(this.RE)[1]);
+
+    if (self.currentNum) {
+      this.mainPhoto.src = self.galleryPicture[self.currentNum];
+      this.spanCurrent.textContent = self.currentNum + 1;
+      self.visibleButton();
+    } else {
+      location.hash = '';
+    }
   };
 
   this.visibleButton = function() {
@@ -88,6 +111,7 @@ function Gallery() {
   };
 
   this.closeGallery = function() {
+    this.isShowGallery = false;
     this.mainPhoto = this.preview.removeChild(this.element);
 
     this.btnNext.removeEventListener('click', self.showNextPage);
@@ -99,17 +123,20 @@ function Gallery() {
   };
 
   this.showNextPage = function() {
-    ++self.currentNum;
-    self.showActivePhoto();
+    self.editLocationHash(1);
   };
 
   this.showBeforePage = function() {
-    --self.currentNum;
-    self.showActivePhoto();
+    self.editLocationHash(-1);
+  };
+
+  this.editLocationHash = function(num) {
+    self.currentNum = self.currentNum + num;
+    location.hash = '#photo/' + self.galleryPicture[self.currentNum];
   };
 
   this.onCloseClickGallery = function() {
-    self.closeGallery();
+    location.hash = '';
   };
 
   /**
@@ -117,13 +144,15 @@ function Gallery() {
    */
   this.onCloseKeydownGallery = function(evt) {
     if (evt.keyCode === 27) {
-      self.closeGallery();
+      location.hash = '';
     }
   };
 
   this.element = this.getPhotoGallery(this.photos);
+  this.hashChange();
 
   this.photoGalleryContainer.addEventListener('click', self.initialClick);
+  window.addEventListener('hashchange', self.hashChange);
 }
 
 module.exports = new Gallery();
