@@ -75,7 +75,7 @@ function Review(data, container) {
   };
 
   this.remove = function() {
-    this.element.removeEventListener('click', this.onClickRQuizAnswer());
+    this.element.removeEventListener('click', this.onClickRQuizAnswer);
     this.element.parentNode.removeChild(this.element);
   };
 }
