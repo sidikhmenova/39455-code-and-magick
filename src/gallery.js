@@ -17,7 +17,7 @@ function Gallery() {
   this.element = null;
   this.isShowGallery = null;
 
-  this.RE = /#photo\/(\S+)/;
+  this.REG_STRING = /#photo\/(\S+)/;
 
   this.btnNext = document.querySelector('.overlay-gallery-control-right');
   this.btnBefore = document.querySelector('.overlay-gallery-control-left');
@@ -46,9 +46,9 @@ function Gallery() {
    */
   this.initialClick = function(evt) {
     evt.preventDefault();
-    self.clickedElement = evt.target.getAttribute('src');
-    self.currentNum = self.getActivePhoto(self.clickedElement);
-    location.hash = '#photo/' + self.galleryPicture[self.currentNum];
+    this.clickedElement = evt.target.getAttribute('src');
+    this.currentNum = self.getActivePhoto(this.clickedElement);
+    location.hash = '#photo/' + self.galleryPicture[this.currentNum];
   };
 
   /**
@@ -65,7 +65,7 @@ function Gallery() {
   };
 
   this.hashChange = function() {
-    var galleryHash = window.location.href.match(self.RE);
+    var galleryHash = window.location.href.match(self.REG_STRING);
 
     if (galleryHash && self.isShowGallery) {
       self.showActivePhoto();
@@ -77,29 +77,37 @@ function Gallery() {
   };
 
   this.showGallery = function() {
-    self.isShowGallery = true;
+    this.isShowGallery = true;
 
-    self.galleryContainer.classList.remove('invisible');
-    self.spanTotal.textContent = self.galleryPicture.length;
+    this.galleryContainer.classList.remove('invisible');
+    this.spanTotal.textContent = this.galleryPicture.length;
 
-    self.element = new Image();
-    self.mainPhoto = self.preview.appendChild(self.element);
+    this.element = new Image();
+    this.mainPhoto = this.preview.appendChild(this.element);
 
-    self.btnNext.addEventListener('click', self.showNextPage);
-    self.btnBefore.addEventListener('click', self.showBeforePage);
-    self.btnClose.addEventListener('click', self.onCloseClickGallery);
-    window.addEventListener('keydown', self.onCloseKeydownGallery);
+    this.btnNext.addEventListener('click', function() {
+      self.showNextPage();
+    });
+    this.btnBefore.addEventListener('click', function() {
+      self.showBeforePage();
+    });
+    this.btnClose.addEventListener('click', function() {
+      self.onCloseClickGallery();
+    });
+    window.addEventListener('keydown', function() {
+      self.onCloseKeydownGallery();
+    });
 
     self.showActivePhoto();
   };
 
   this.showActivePhoto = function() {
-    self.currentNum = self.getActivePhoto(window.location.href.match(this.RE)[1]);
+    this.currentNum = this.getActivePhoto(window.location.href.match(this.REG_STRING)[1]);
 
-    if (self.currentNum) {
-      this.mainPhoto.src = self.galleryPicture[self.currentNum];
-      this.spanCurrent.textContent = self.currentNum + 1;
-      self.visibleButton();
+    if (this.currentNum) {
+      this.mainPhoto.src = this.galleryPicture[this.currentNum];
+      this.spanCurrent.textContent = this.currentNum + 1;
+      this.visibleButton();
     } else {
       location.hash = '';
     }
@@ -114,10 +122,18 @@ function Gallery() {
     this.isShowGallery = false;
     this.mainPhoto = this.preview.removeChild(this.element);
 
-    this.btnNext.removeEventListener('click', self.showNextPage);
-    this.btnBefore.removeEventListener('click', self.showBeforePage);
-    this.btnClose.removeEventListener('click', self.onCloseClickGallery);
-    window.removeEventListener('keydown', self.onCloseKeydownGallery);
+    this.btnNext.removeEventListener('click', function() {
+      self.showNextPage();
+    });
+    this.btnBefore.removeEventListener('click', function() {
+      self.showBeforePage();
+    });
+    this.btnClose.removeEventListener('click', function() {
+      self.onCloseClickGallery();
+    });
+    window.removeEventListener('keydown', function() {
+      self.onCloseKeydownGallery();
+    });
 
     this.galleryContainer.classList.add('invisible');
   };
@@ -131,7 +147,7 @@ function Gallery() {
   };
 
   this.editLocationHash = function(num) {
-    self.currentNum = self.currentNum + num;
+    this.currentNum = this.currentNum + num;
     location.hash = '#photo/' + self.galleryPicture[self.currentNum];
   };
 
