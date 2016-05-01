@@ -167,8 +167,12 @@ function Gallery() {
   this.element = this.getPhotoGallery(this.photos);
   this.hashChange();
 
-  this.photoGalleryContainer.addEventListener('click', self.initialClick);
-  window.addEventListener('hashchange', self.hashChange);
+  this.photoGalleryContainer.addEventListener('click', function(evt) {
+    self.initialClick(evt);
+  });
+  window.addEventListener('hashchange', function() {
+    self.hashChange();
+  });
 }
 
 module.exports = new Gallery();
