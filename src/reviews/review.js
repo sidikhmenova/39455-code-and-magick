@@ -19,6 +19,7 @@ if ('content' in template) {
   cloneElement = template.querySelector('.review');
 }
 
+/** @constructor */
 function Review(data, container) {
   this.data = data;
 

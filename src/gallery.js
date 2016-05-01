@@ -33,6 +33,7 @@ function Gallery() {
   this.galleryPicture = [];
 
   /**
+   * Функция получения массива фотографий, на основе фотографий, расположенных на главной странице
    * @param {Array} pct
    */
   this.getPhotoGallery = function(pct) {
@@ -42,6 +43,7 @@ function Gallery() {
   };
 
   /**
+   * Функция первоначального клика на фотографии с главной страницы
    * @param {KeyboardEvent} evt
    */
   this.initialClick = function(evt) {
@@ -52,6 +54,7 @@ function Gallery() {
   };
 
   /**
+   * Функция определения индекса в массиве по переданному элементу. Используется во всех случаях изменения фото.
    * @param {string} clkElement
    * @returns {number}
    */
@@ -64,6 +67,9 @@ function Gallery() {
     return null;
   };
 
+  /**
+   * Функция анализа изменения значений в адресной строке
+   */
   this.hashChange = function() {
     var galleryHash = window.location.href.match(self.REG_STRING);
 
@@ -76,6 +82,9 @@ function Gallery() {
     }
   };
 
+  /**
+   * Функция отрисовки галереи
+   */
   this.showGallery = function() {
     this.isShowGallery = true;
 
@@ -101,6 +110,9 @@ function Gallery() {
     self.showActivePhoto();
   };
 
+  /**
+   * Функция отрисовки активной фото
+   */
   this.showActivePhoto = function() {
     this.currentNum = this.getActivePhoto(window.location.href.match(this.REG_STRING)[1]);
 
@@ -113,11 +125,17 @@ function Gallery() {
     }
   };
 
+  /**
+   * Функция, отвечающая за отображение кнопок "вперед", "назад". Анализирует значение текущей фотографии по отношению к макс, мин индексу массива
+   */
   this.visibleButton = function() {
     this.btnBefore.classList.toggle('invisible', self.currentNum === 0);
     this.btnNext.classList.toggle('invisible', (self.currentNum + 1) === self.galleryPicture.length);
   };
 
+  /**
+   * Функция закрытия блока галлереи
+   */
   this.closeGallery = function() {
     this.isShowGallery = false;
     this.mainPhoto = this.preview.removeChild(this.element);
@@ -138,19 +156,32 @@ function Gallery() {
     this.galleryContainer.classList.add('invisible');
   };
 
+  /**
+   * Функция, отвечающая за отображение след.страницы. Передает в функцию редактирования hash строки - на сколько нужно изменить тек.позицию в массиве
+   */
   this.showNextPage = function() {
     self.editLocationHash(1);
   };
 
+  /**
+   * Функция, отвечающая за отображение пред.страницы. Передает в функцию редактирования hash строки - на сколько нужно изменить тек.позицию в массиве
+   */
   this.showBeforePage = function() {
     self.editLocationHash(-1);
   };
 
+  /**
+   * Функция, отвечающая за редактирования hash строки на основе переданных данных. Вызывается при листании "вперед", "назад"
+   * @param {number} num
+   */
   this.editLocationHash = function(num) {
     this.currentNum = this.currentNum + num;
     location.hash = '#photo/' + self.galleryPicture[self.currentNum];
   };
 
+  /**
+   * Функция, измененяющая значение hash при иницииации закрытия формы
+   */
   this.onCloseClickGallery = function() {
     location.hash = '';
   };
