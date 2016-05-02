@@ -16,7 +16,7 @@ var btnClose = document.querySelector('.overlay-gallery-close');
 var spanCurrent = document.querySelector('.preview-number-current');
 var spanTotal = document.querySelector('.preview-number-total');
 
-var utility = require('./utils');
+var inherit = require('./utils');
 var BaseComponent = require('./base-component');
 
 /** @constructor */
@@ -50,6 +50,8 @@ function Gallery() {
   photoGalleryContainer.addEventListener('click', this.initialClick);
   window.addEventListener('hashchange', this.hashChange.bind(this));
 }
+
+inherit(Gallery, BaseComponent);
 
 /**
  * Функция получения массива фотографий, на основе фотографий, расположенных на главной странице
@@ -156,8 +158,6 @@ Gallery.prototype.showNextPage = function() {
 Gallery.prototype.showBeforePage = function() {
   location.hash = '#photo/' + this.galleryPicture[this.currentNum - 1];
 };
-
-utility.inherit(Gallery, BaseComponent);
 
 /**
  * Функция закрытия блока галлереи
