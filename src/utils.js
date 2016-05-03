@@ -6,8 +6,8 @@
 
 /**
  * Вспомогательная функция, наследующая класс из source и продлевающая цепочку прототипов target с использованием пустого конструктора
- * @param source
- * @param target
+ * @param {Object} target
+ * @param {Object} source
  */
 function inherit(target, source) {
   function EmptyCtor() {}

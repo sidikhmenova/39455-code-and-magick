@@ -18,23 +18,41 @@ var Review = require('../reviews/review');
 
 filterList.classList.add('invisible');
 
-/** @constant {number} */
+/**
+ * @constant {number}
+ */
 var PAGE_SIZE = 3;
 
-/** @constant {number} */
+/**
+ * @constant {number}
+ */
 var IMAGE_LOAD_TIMEOUT = 10000;
 
-/** @constant {string} */
+/**
+ * @constant {string}
+ */
 var REVIEW_LOAD_URL = '//o0.github.io/assets/json/reviews.json';
 
-/** @type {Array.<Object>} */
+/**
+ * @type {Array.<Object>}
+ */
 var filteredReviews = [];
 
-/** @type {Array.<Review>} */
+/**
+ * @type {Array.<Review>}
+ */
 var renderedReviews = [];
 
+/**
+ * @type {number}
+ */
 var pageNumber = 0;
 
+
+/**
+ * Функция получения списка отзывов
+ * @param {Array.<Object>} callback
+ */
 function getReviewList(callback) {
   var xhr = new XMLHttpRequest();
 
@@ -59,10 +77,20 @@ function getReviewList(callback) {
   xhr.send();
 }
 
+/**
+ * Функция анализа доступности след.страницы отзывов
+ * @param {Array.<Object>} reviewItem
+ * @param {number} pageNum
+ * @param {number} pageSize
+ * @returns {boolean}
+ */
 function isNextPageAvailable(reviewItem, pageNum, pageSize) {
   return pageNum < Math.ceil(reviewItem.length / pageSize);
 }
 
+/**
+ * Функция загрузки след.страницы отзывов по клику на кнопку "Еще отзывы"
+ */
 function btnMoreActive() {
   buttonMore.addEventListener('click', function() {
     if (isNextPageAvailable(reviews, pageNumber, PAGE_SIZE)) {
@@ -72,13 +100,17 @@ function btnMoreActive() {
   });
 }
 
-// Функция, возвращающая ошибку
+/**
+ * Функция, возвращающая ошибку загрузки списка отзывов
+ */
 function reviewsFailure() {
   sectionReviews.classList.remove('reviews-list-loading');
   sectionReviews.classList.add('reviews-load-failure');
 }
 
-/** @param {Array.<Object>} data
+/**
+ * Функция отрисовки списка отзывов
+ * @param {Array.<Object>} data
  * @param {number} page
  * @param {boolean=} replace
  * */
@@ -106,16 +138,26 @@ function renderReview(data, page, replace) {
   }
 }
 
+/**
+ * Обработчик события изменения текущего фильтра
+ */
 filterList.addEventListener('change', function() {
   setActiveFilter(filterItem.value);
 });
 
+/**
+ * Функия установки текущего фильтра и вызова отрисовки отзывов для текущего фильтра
+ * @param {number} id
+ */
 function setActiveFilter(id) {
   pageNumber = 0;
   filteredReviews = filter(id, reviews);
   renderReview(filteredReviews, pageNumber, true);
 }
 
+/**
+ * Функия получения списка отзывов
+ */
 getReviewList(function(loadedReviews) {
   reviews = loadedReviews;
   setActiveFilter(defaultFilter);

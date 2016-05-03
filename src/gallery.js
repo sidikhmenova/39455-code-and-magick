@@ -19,15 +19,35 @@ var spanTotal = document.querySelector('.preview-number-total');
 var inherit = require('./utils');
 var BaseComponent = require('./base-component');
 
-/** @constructor */
+/**
+ * @constructor
+ */
 function Gallery() {
-  this.clickedElement = null;
-  this.mainPhoto = null;
-  this.element = null;
-  this.isShowGallery = null;
-  this.currentNum = 1;
-  this.galleryPicture = [];
+  BaseComponent.call(this, this.element, preview);
 
+  /**
+   * @type {string}
+   */
+  this.clickedElement = null;
+  /**
+   * @type {Object}
+   */
+  this.element = null;
+  /**
+   * @type {boolean}
+   */
+  this.isShowGallery = null;
+  /**
+   * @type {number}
+   */
+  this.currentNum = 1;
+  /**
+   * @type {Array}
+   */
+  this.galleryPicture = [];
+  /**
+   * @type {RegExp}
+   */
   this.REG_STRING = /#photo\/(\S+)/;
 
   this.getPhotoGallery = this.getPhotoGallery.bind(this);
@@ -68,9 +88,11 @@ Gallery.prototype.getPhotoGallery = function() {
  */
 Gallery.prototype.initialClick = function(evt) {
   evt.preventDefault();
-  this.clickedElement = evt.target.getAttribute('src');
-  this.currentNum = this.getActivePhoto(this.clickedElement);
-  location.hash = '#photo/' + this.galleryPicture[this.currentNum];
+  if (evt.target.tagName === 'IMG') {
+    this.clickedElement = evt.target.getAttribute('src');
+    this.currentNum = this.getActivePhoto(this.clickedElement);
+    location.hash = '#photo/' + this.galleryPicture[this.currentNum];
+  }
 };
 
 /**
@@ -112,7 +134,7 @@ Gallery.prototype.showGallery = function() {
   spanTotal.textContent = this.galleryPicture.length;
 
   this.element = new Image();
-  this.mainPhoto = preview.appendChild(this.element);
+  BaseComponent.prototype.create.call(this);
 
   btnNext.addEventListener('click', this.showNextPage);
   btnBefore.addEventListener('click', this.showBeforePage);
@@ -129,7 +151,7 @@ Gallery.prototype.showActivePhoto = function() {
   this.currentNum = this.getActivePhoto(window.location.href.match(this.REG_STRING)[1]);
 
   if (this.currentNum >= 0) {
-    this.mainPhoto.src = this.galleryPicture[this.currentNum];
+    this.element.src = this.galleryPicture[this.currentNum];
     spanCurrent.textContent = this.currentNum + 1;
     this.visibleButton();
   } else {
@@ -164,7 +186,6 @@ Gallery.prototype.showBeforePage = function() {
  */
 Gallery.prototype.closeGallery = function() {
   this.isShowGallery = false;
-  //this.mainPhoto = preview.removeChild(this.element);
   BaseComponent.prototype.remove.call(this);
 
   btnNext.removeEventListener('click', this.showNextPage);

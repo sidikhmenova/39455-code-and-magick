@@ -43,6 +43,7 @@ Review.prototype.getReview = function() {
   var reviewRatingBlock = element.querySelector('.review-rating');
   var rating = this.data.rating;
   var transRating = ['one', 'two', 'three', 'four', 'five'];
+  var that = this;
 
   element.querySelector('.review-text').textContent = this.data.description;
 
@@ -50,8 +51,8 @@ Review.prototype.getReview = function() {
     clearTimeout(backgroundLoadTimeout);
     element.replaceChild(backgroundImage, element.children[0]);
     backgroundImage.classList.add('review-author');
-    backgroundImage.alt = 'Отзыв пользователя ' + this.data.author.name + ' об игре Code & Magick';
-    backgroundImage.title = this.data.author.name;
+    backgroundImage.alt = 'Отзыв пользователя ' + that.data.author.name + ' об игре Code & Magick';
+    backgroundImage.title = that.data.author.name;
     backgroundImage.width = 124;
     backgroundImage.height = 124;
   });
