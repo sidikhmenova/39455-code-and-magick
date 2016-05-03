@@ -461,6 +461,18 @@ input[type=radio]:checked + .review-mark-label {
   border: 0;
 }
 
+.review-name-error, .review-text-error {
+  width: 295px;
+  margin-top: 10px;
+  padding: 5px;
+
+  border: 2px solid white;
+  border-radius: 4% 0 / 50%;
+  background-color: red;
+
+  font-size: 12px;
+}
+
 .review-form-field-name {
   width: 15em;
 }

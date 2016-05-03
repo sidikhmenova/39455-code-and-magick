@@ -21,13 +21,19 @@ if ('content' in template) {
 
 /** @constructor */
 function Review(data, container) {
+  this.element = null;
+  this.container = container;
   this.data = data;
 
+  this.initialization();
+}
+
+Review.prototype.initialization = function() {
   this.element = this.getReview();
   this.element.addEventListener('click', this.onClickRQuizAnswer);
 
-  container.appendChild(this.element);
-}
+  this.container.appendChild(this.element);
+};
 
 /**
  * Функция работы с полученным отзывом по шаблону.

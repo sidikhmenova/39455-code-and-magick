@@ -4,17 +4,17 @@
 
 'use strict';
 var galleryContainer = document.querySelector('.overlay-gallery');
-var preview = document.querySelector('.overlay-gallery-preview');
+var preview = galleryContainer.querySelector('.overlay-gallery-preview');
 
 var photoGalleryContainer = document.querySelector('.photogallery');
-var photos = document.querySelectorAll('.photogallery img');
+var photos = photoGalleryContainer.querySelectorAll('img');
 
-var btnNext = document.querySelector('.overlay-gallery-control-right');
-var btnBefore = document.querySelector('.overlay-gallery-control-left');
-var btnClose = document.querySelector('.overlay-gallery-close');
+var btnNext = galleryContainer.querySelector('.overlay-gallery-control-right');
+var btnBefore = galleryContainer.querySelector('.overlay-gallery-control-left');
+var btnClose = galleryContainer.querySelector('.overlay-gallery-close');
 
-var spanCurrent = document.querySelector('.preview-number-current');
-var spanTotal = document.querySelector('.preview-number-total');
+var spanCurrent = galleryContainer.querySelector('.preview-number-current');
+var spanTotal = galleryContainer.querySelector('.preview-number-total');
 
 var inherit = require('./utils');
 var BaseComponent = require('./base-component');
