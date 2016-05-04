@@ -27,71 +27,79 @@ function Gallery() {
 
   /**
    * @type {string}
+   * @private
    */
-  this.clickedElement = null;
+  this._clickedElement = null;
   /**
    * @type {Object}
    */
   this.element = null;
   /**
    * @type {boolean}
+   * @private
    */
-  this.isShowGallery = null;
+  this._isShowGallery = null;
   /**
    * @type {number}
+   * @private
    */
-  this.currentNum = 1;
+  this._currentNum = 1;
   /**
    * @type {Array}
+   * @private
    */
-  this.galleryPicture = [];
+  this._galleryPicture = [];
   /**
    * @type {RegExp}
+   * @private
    */
-  this.REG_STRING = /#photo\/(\S+)/;
+  this._REG_STRING = /#photo\/(\S+)/;
 
-  this.getPhotoGallery = this.getPhotoGallery.bind(this);
-  this.initialClick = this.initialClick.bind(this);
-  this.getActivePhoto = this.getActivePhoto.bind(this);
-  this.hashChange = this.hashChange.bind(this);
-  this.showGallery = this.showGallery.bind(this);
-  this.showActivePhoto = this.showActivePhoto.bind(this);
-  this.visibleButton = this.visibleButton.bind(this);
-  this.closeGallery = this.closeGallery.bind(this);
-  this.visibleButton = this.visibleButton.bind(this);
-  this.showNextPage = this.showNextPage.bind(this);
-  this.showBeforePage = this.showBeforePage.bind(this);
-  this.clearHash = this.clearHash.bind(this);
-  this.onCloseKeydownGallery = this.onCloseKeydownGallery.bind(this);
+  this._getPhotoGallery = this._getPhotoGallery.bind(this);
+  this._initialClick = this._initialClick.bind(this);
+  this._getActivePhoto = this._getActivePhoto.bind(this);
+  this._hashChange = this._hashChange.bind(this);
+  this._showGallery = this._showGallery.bind(this);
+  this._showActivePhoto = this._showActivePhoto.bind(this);
+  this._visibleButton = this._visibleButton.bind(this);
+  this._closeGallery = this._closeGallery.bind(this);
+  this._visibleButton = this._visibleButton.bind(this);
+  this._showNextPage = this._showNextPage.bind(this);
+  this._showBeforePage = this._showBeforePage.bind(this);
+  this._clearHash = this._clearHash.bind(this);
+  this._editLocationHash = this._editLocationHash.bind(this);
+  this._onCloseKeydownGallery = this._onCloseKeydownGallery.bind(this);
 
-  this.element = this.getPhotoGallery();
-  this.hashChange();
+  this.element = this._getPhotoGallery();
+  this._hashChange();
 
-  photoGalleryContainer.addEventListener('click', this.initialClick);
-  window.addEventListener('hashchange', this.hashChange.bind(this));
+  photoGalleryContainer.addEventListener('click', this._initialClick);
+  window.addEventListener('hashchange', this._hashChange.bind(this));
 }
 
 inherit(Gallery, BaseComponent);
 
 /**
  * Функция получения массива фотографий, на основе фотографий, расположенных на главной странице
+ * @private
  */
-Gallery.prototype.getPhotoGallery = function() {
+Gallery.prototype._getPhotoGallery = function() {
   for (var i = 0; i < photos.length; i++) {
-    this.galleryPicture[i] = photos[i].getAttribute('src');
+    this._galleryPicture[i] = photos[i].getAttribute('src');
   }
 };
 
 /**
  * Функция первоначального клика на фотографии с главной страницы
- * @param {KeyboardEvent} evt
+ * @param {MouseEvent} evt
+ * @private
  */
-Gallery.prototype.initialClick = function(evt) {
+Gallery.prototype._initialClick = function(evt) {
   evt.preventDefault();
   if (evt.target.tagName === 'IMG') {
-    this.clickedElement = evt.target.getAttribute('src');
-    this.currentNum = this.getActivePhoto(this.clickedElement);
-    location.hash = '#photo/' + this.galleryPicture[this.currentNum];
+    this._clickedElement = evt.target.getAttribute('src');
+    this._currentNum = this._getActivePhoto(this._clickedElement);
+    this._editLocationHash(this._currentNum);
   }
 };
 
@@ -99,10 +107,11 @@ Gallery.prototype.initialClick = function(evt) {
  * Функция определения индекса в массиве по переданному элементу. Используется во всех случаях изменения фото.
  * @param {string} clkElement
  * @returns {number}
+ * @private
  */
-Gallery.prototype.getActivePhoto = function(clkElement) {
-  for (var i = 0; i < this.galleryPicture.length; i++) {
-    if (this.galleryPicture[i] === clkElement) {
+Gallery.prototype._getActivePhoto = function(clkElement) {
+  for (var i = 0; i < this._galleryPicture.length; i++) {
+    if (this._galleryPicture[i] === clkElement) {
       return i;
     }
   }
@@ -111,105 +120,127 @@ Gallery.prototype.getActivePhoto = function(clkElement) {
 
 /**
  * Функция анализа изменения значений в адресной строке
+ * @private
  */
-Gallery.prototype.hashChange = function() {
-  var galleryHash = window.location.href.match(this.REG_STRING);
+Gallery.prototype._hashChange = function() {
+  var galleryHash = window.location.href.match(this._REG_STRING);
 
-  if (galleryHash && this.isShowGallery) {
-    this.showActivePhoto();
-  } else if(galleryHash && !this.isShowGallery) {
-    this.showGallery();
-  } else if(!galleryHash && this.isShowGallery) {
-    this.closeGallery();
+  if (galleryHash && this._isShowGallery) {
+    this._showActivePhoto();
+  } else if(galleryHash && !this._isShowGallery) {
+    this._showGallery();
+  } else if(!galleryHash && this._isShowGallery) {
+    this._closeGallery();
   }
 };
 
 /**
  * Функция отрисовки галереи
+ * @private
  */
-Gallery.prototype.showGallery = function() {
-  this.isShowGallery = true;
+Gallery.prototype._showGallery = function() {
+  this._isShowGallery = true;
 
   galleryContainer.classList.remove('invisible');
-  spanTotal.textContent = this.galleryPicture.length;
+  spanTotal.textContent = this._galleryPicture.length;
 
   this.element = new Image();
   BaseComponent.prototype.create.call(this);
 
-  btnNext.addEventListener('click', this.showNextPage);
-  btnBefore.addEventListener('click', this.showBeforePage);
-  btnClose.addEventListener('click', this.clearHash);
-  window.addEventListener('keydown', this.onCloseKeydownGallery);
+  btnNext.addEventListener('click', this._showNextPage);
+  btnBefore.addEventListener('click', this._showBeforePage);
+  btnClose.addEventListener('click', this._clearHash);
+  window.addEventListener('keydown', this._onCloseKeydownGallery);
 
-  this.showActivePhoto();
+  this._showActivePhoto();
 };
 
 /**
  * Функция отрисовки активной фото
+ * @private
  */
-Gallery.prototype.showActivePhoto = function() {
-  this.currentNum = this.getActivePhoto(window.location.href.match(this.REG_STRING)[1]);
+Gallery.prototype._showActivePhoto = function() {
+  this._currentNum = this._getActivePhoto(window.location.href.match(this._REG_STRING)[1]);
 
-  if (this.currentNum >= 0) {
-    this.element.src = this.galleryPicture[this.currentNum];
-    spanCurrent.textContent = this.currentNum + 1;
-    this.visibleButton();
+  if (this._currentNum >= 0) {
+    this.element.src = this._galleryPicture[this._currentNum];
+    spanCurrent.textContent = this._currentNum + 1;
+    this._visibleButton();
   } else {
-    this.clearHash();
+    this._editLocationHash();
+  }
+};
+
+/**
+ * Функция
+ * @param {number} num
+ * @private
+ */
+Gallery.prototype._editLocationHash = function(num) {
+  if (!num) {
+    location.hash = '';
+  } else {
+    location.hash = '#photo/' + this._galleryPicture[num];
   }
 };
 
 /**
  * Функция, отвечающая за отображение кнопок "вперед", "назад". Анализирует значение текущей фотографии по отношению к макс, мин индексу массива
+ * @private
  */
-Gallery.prototype.visibleButton = function() {
-  btnBefore.classList.toggle('invisible', this.currentNum === 0);
-  btnNext.classList.toggle('invisible', (this.currentNum + 1) === this.galleryPicture.length);
+Gallery.prototype._visibleButton = function() {
+  btnBefore.classList.toggle('invisible', this._currentNum === 0);
+  btnNext.classList.toggle('invisible', (this._currentNum + 1) === this._galleryPicture.length);
 };
 
 /**
  * Функция, меняющая адрес в hash для отображения след.картинки
+ * @private
  */
-Gallery.prototype.showNextPage = function() {
-  location.hash = '#photo/' + this.galleryPicture[this.currentNum + 1];
+Gallery.prototype._showNextPage = function() {
+  this._editLocationHash(this._currentNum + 1);
 };
 
 /**
  * Функция, меняющая адрес в hash для отображения пред.картинки
+ * @private
  */
-Gallery.prototype.showBeforePage = function() {
-  location.hash = '#photo/' + this.galleryPicture[this.currentNum - 1];
+Gallery.prototype._showBeforePage = function() {
+  this._editLocationHash(this._currentNum - 1);
 };
 
 /**
  * Функция закрытия блока галлереи
+ * @private
  */
-Gallery.prototype.closeGallery = function() {
-  this.isShowGallery = false;
+Gallery.prototype._closeGallery = function() {
+  this._isShowGallery = false;
   BaseComponent.prototype.remove.call(this);
 
-  btnNext.removeEventListener('click', this.showNextPage);
-  btnBefore.removeEventListener('click', this.showBeforePage);
-  btnClose.removeEventListener('click', this.clearHash);
-  window.removeEventListener('keydown', this.onCloseKeydownGallery);
+  btnNext.removeEventListener('click', this._showNextPage);
+  btnBefore.removeEventListener('click', this._showBeforePage);
+  btnClose.removeEventListener('click', this._clearHash);
+  window.removeEventListener('keydown', this._onCloseKeydownGallery);
 
   galleryContainer.classList.add('invisible');
 };
 
 /**
  * Функция, отвечающая за редактирования hash строки на основе переданных данных. Вызывается при листании "вперед", "назад"
+ * @private
  */
-Gallery.prototype.clearHash = function() {
-  location.hash = '';
+Gallery.prototype._clearHash = function() {
+  this._editLocationHash();
 };
 
 /**
  * Функция, выполняющая анализ нажатой клавиши
  * @param {KeyboardEvent} evt
+ * @private
  */
-Gallery.prototype.onCloseKeydownGallery = function(evt) {
+Gallery.prototype._onCloseKeydownGallery = function(evt) {
   if (evt.keyCode === 27) {
-    this.clearHash();
+    this._clearHash();
   }
 };
 
