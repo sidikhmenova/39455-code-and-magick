@@ -177,7 +177,7 @@ Gallery.prototype._showActivePhoto = function() {
  * @private
  */
 Gallery.prototype._editLocationHash = function(num) {
-  if (!num) {
+  if (isNaN(num)) {
     location.hash = '';
   } else {
     location.hash = '#photo/' + this._galleryPicture[num];
