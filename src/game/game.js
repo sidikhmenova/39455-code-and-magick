@@ -747,6 +747,9 @@ var gameBlock = document.querySelector('.demo');
 var moveCloud = require('../game/parallax');
 var scrollTimeout;
 
+/**
+ * Обработчик события скрола
+ */
 window.addEventListener('scroll', function() {
   clearTimeout(scrollTimeout);
   scrollTimeout = setTimeout(stopGame, 100);
@@ -754,6 +757,9 @@ window.addEventListener('scroll', function() {
   moveCloud();
 });
 
+/**
+ * Функция постановки игры на паузу
+ */
 function stopGame() {
   var gamePosition = gameBlock.getBoundingClientRect();
   var isGameAvailable = window.innerHeight - (gamePosition.height - gamePosition.top);
@@ -768,7 +774,6 @@ window.Game.Verdict = Verdict;
 
 var game = new Game(document.querySelector('.demo'));
 setTimeout(game.initializeLevelAndStart(), 10000);
-//game.initializeLevelAndStart();
 game.setGameStatus(window.Game.Verdict.INTRO);
 
 moveCloud();

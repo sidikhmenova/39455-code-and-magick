@@ -5,6 +5,9 @@
 
 var cloudBlock = document.querySelector('.header-clouds');
 
+/**
+ * Функция, отвечающая за движение облаков
+ */
 function moveCloud() {
   var cloudPosition = cloudBlock.getBoundingClientRect();
   var isCloudAvailable = window.innerHeight - (cloudPosition.height - cloudPosition.top);

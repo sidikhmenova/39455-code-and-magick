@@ -5,6 +5,7 @@
 'use strict';
 
 /**
+ * Функция фильтрации списка отзывов
  * @param {Array.<Object>} reviews
  * @param {string} id
  * @return {Array.<Object>}
